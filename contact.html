@@ -1,0 +1,406 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせ | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── レイアウト ─── */
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 60px;
+      padding: var(--section-gap) 0;
+      align-items: start;
+    }
+
+    /* ─── お問い合わせ種別 ─── */
+    .inquiry-types {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .inquiry-type {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: var(--white);
+      font-family: var(--font-sans);
+      transition: all 0.15s;
+    }
+    .inquiry-type:hover { border-color: var(--green); color: var(--green); }
+    .inquiry-type.selected {
+      border-color: var(--green);
+      background: var(--green-xlight);
+      color: var(--green-dark);
+      font-weight: 500;
+    }
+
+    /* ─── フォーム ─── */
+    .form-row { margin-bottom: 18px; }
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .req-badge {
+      font-size: 10px;
+      background: #D94040;
+      color: var(--white);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+    .opt-badge {
+      font-size: 10px;
+      background: var(--text-light);
+      color: var(--white);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      background: var(--white);
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .form-textarea { height: 130px; resize: vertical; }
+    .form-row-half { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* ─── 同意 ─── */
+    .consent-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      background: var(--bg);
+      margin-bottom: 28px;
+    }
+    .consent-box-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .consent-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 12px;
+    }
+    .consent-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .consent-check input[type="checkbox"] {
+      accent-color: var(--green);
+      width: 15px; height: 15px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ─── サイドバー ─── */
+    .contact-sidebar-sticky {
+      position: sticky;
+      top: 84px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .sidebar-faq-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .sidebar-faq-link:last-child { border-bottom: none; }
+    .sidebar-faq-link:hover { color: var(--green); }
+    .sidebar-faq-link i { font-size: 13px; flex-shrink: 0; }
+
+    @media (max-width: 1024px) {
+      .contact-wrapper { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .inquiry-types { grid-template-columns: repeat(2, 1fr); }
+      .form-row-half { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Contact</span>
+      <h1 class="page-hero-title">お問い合わせ</h1>
+      <p class="page-hero-sub">ご予約・施設・その他のご質問はこちらからどうぞ。</p>
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>お問い合わせ</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- フォーム + サイドバー -->
+  <div class="container">
+    <div class="contact-wrapper">
+
+      <!-- メインフォーム -->
+      <form>
+        <!-- お問い合わせ種別 -->
+        <div class="form-row">
+          <div class="form-label" style="font-size:13px;margin-bottom:10px;">お問い合わせ種別 <span class="req-badge">必須</span></div>
+          <div class="inquiry-types">
+            <div class="inquiry-type selected">ご予約について</div>
+            <div class="inquiry-type">施設・設備について</div>
+            <div class="inquiry-type">ペットについて</div>
+            <div class="inquiry-type">アクセス・周辺情報</div>
+            <div class="inquiry-type">料金・割引について</div>
+            <div class="inquiry-type">その他</div>
+          </div>
+        </div>
+
+        <!-- 対象施設 -->
+        <div class="form-row" style="margin-top:24px;">
+          <label class="form-label">対象施設 <span class="opt-badge">任意</span></label>
+          <select class="form-select">
+            <option value="">施設を選択（任意）</option>
+            <option>SISUMO 鈴川</option>
+            <option>SISUMO 昆布</option>
+            <option>どちらも</option>
+            <option>未定</option>
+          </select>
+        </div>
+
+        <!-- お名前 -->
+        <div class="form-row">
+          <label class="form-label">お名前 <span class="req-badge">必須</span></label>
+          <input type="text" class="form-input" placeholder="例：山田 太郎">
+        </div>
+
+        <!-- メール・電話 -->
+        <div class="form-row form-row-half">
+          <div>
+            <label class="form-label">メールアドレス <span class="req-badge">必須</span></label>
+            <input type="email" class="form-input" placeholder="例：example@email.com">
+          </div>
+          <div>
+            <label class="form-label">電話番号 <span class="opt-badge">任意</span></label>
+            <input type="tel" class="form-input" placeholder="例：090-0000-0000">
+          </div>
+        </div>
+
+        <!-- 希望日程 -->
+        <div class="form-row form-row-half">
+          <div>
+            <label class="form-label">ご希望のチェックイン日 <span class="opt-badge">任意</span></label>
+            <input type="date" class="form-input">
+          </div>
+          <div>
+            <label class="form-label">ご希望のチェックアウト日 <span class="opt-badge">任意</span></label>
+            <input type="date" class="form-input">
+          </div>
+        </div>
+
+        <!-- 人数 -->
+        <div class="form-row">
+          <label class="form-label">宿泊人数 <span class="opt-badge">任意</span></label>
+          <select class="form-select">
+            <option value="">人数を選択（任意）</option>
+            <option>1名</option><option>2名</option><option>3名</option>
+            <option>4名</option><option>5名</option><option>6名</option>
+            <option>7名</option><option>8名</option>
+          </select>
+        </div>
+
+        <!-- お問い合わせ内容 -->
+        <div class="form-row">
+          <label class="form-label">お問い合わせ内容 <span class="req-badge">必須</span></label>
+          <textarea class="form-textarea" placeholder="ご質問・ご相談内容をご記入ください。"></textarea>
+        </div>
+
+        <!-- 同意 -->
+        <div class="consent-box">
+          <div class="consent-box-title">個人情報の取り扱いについて</div>
+          <p class="consent-text">ご入力いただいた個人情報は、お問い合わせへの回答および予約対応のみに使用し、第三者への提供は行いません。</p>
+          <label class="consent-check">
+            <input type="checkbox">
+            個人情報の取り扱いに同意する <span style="color:#D94040;margin-left:4px;">（必須）</span>
+          </label>
+        </div>
+
+        <!-- 送信 -->
+        <div style="text-align:center;">
+          <button type="submit" class="btn btn-primary btn-lg" style="min-width:220px;justify-content:center;">送信する</button>
+          <p style="font-size:11px;color:var(--text-light);margin-top:10px;">送信後、確認メールが自動送信されます。通常1〜2営業日以内にご返信いたします。</p>
+        </div>
+      </form>
+
+      <!-- サイドバー -->
+      <div class="contact-sidebar-sticky">
+
+        <!-- 仮予約への誘導 -->
+        <div class="sidebar-card" style="border:2px solid var(--green);">
+          <div class="sidebar-card-title">ご予約はこちら</div>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-bottom:14px;">日程・施設が決まっている場合は、仮予約フォームからお申し込みください。料金の自動計算もできます。</p>
+          <a href="booking.html" class="btn btn-primary" style="width:100%;justify-content:center;font-size:13px;">仮予約フォームへ <i class="ti ti-arrow-right" style="font-size:13px;"></i></a>
+        </div>
+
+        <!-- よくある質問 -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">よくある質問</div>
+          <p style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">お問い合わせの前にご確認ください。</p>
+          <a class="sidebar-faq-link" href="faq.html#checkin">チェックインの方法は？ <i class="ti ti-chevron-right"></i></a>
+          <a class="sidebar-faq-link" href="faq.html#cancel">キャンセルポリシーは？ <i class="ti ti-chevron-right"></i></a>
+          <a class="sidebar-faq-link" href="faq.html#pet">ペットは連れて行ける？ <i class="ti ti-chevron-right"></i></a>
+          <a class="sidebar-faq-link" href="faq.html#bbq">BBQはできる？ <i class="ti ti-chevron-right"></i></a>
+          <a class="sidebar-faq-link" href="faq.html" style="color:var(--green);font-weight:500;">よくある質問をすべて見る <i class="ti ti-chevron-right"></i></a>
+        </div>
+
+        <!-- 返信について -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">返信について</div>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.9;">
+            通常1〜2営業日以内にメールにてご返信いたします。<br><br>
+            返信メールが届かない場合は、迷惑メールフォルダをご確認ください。
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.inquiry-type').forEach(type => {
+      type.addEventListener('click', () => {
+        document.querySelectorAll('.inquiry-type').forEach(t => t.classList.remove('selected'));
+        type.classList.add('selected');
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,431 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アクセス | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── 施設切替タブ ─── */
+    .prop-tab-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 68px;
+      z-index: 90;
+    }
+    .prop-tabs {
+      display: flex;
+    }
+    .prop-tab {
+      flex: 1;
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+    }
+    .prop-tab:hover { color: var(--text); }
+    .prop-tab.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+      font-weight: 500;
+    }
+
+    /* ─── アクセスブロック ─── */
+    .property-access-block {
+      padding: var(--section-gap) 0;
+      border-bottom: 1px solid var(--border);
+      display: none;
+    }
+    .property-access-block.active { display: block; }
+
+    .access-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 36px;
+      align-items: start;
+    }
+    .map-embed {
+      aspect-ratio: 4/3;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 13px;
+    }
+    .access-details { display: flex; flex-direction: column; gap: 20px; }
+
+    .address-box {
+      padding: 16px 18px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .address-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+    .address-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .dist-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .dist-list { display: flex; flex-direction: column; }
+    .dist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dist-item:last-child { border-bottom: none; }
+    .dist-place { color: var(--text); }
+    .dist-time { color: var(--green); font-weight: 500; }
+    .dist-time.walk { color: #3A7EA0; }
+
+    .parking-box {
+      padding: 14px 16px;
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .parking-box i { color: var(--green); }
+
+    .caution-box {
+      font-size: 12px;
+      color: #B94040;
+      background: #FDF3F3;
+      border: 1px solid #F5C6C6;
+      border-left: 3px solid #E05050;
+      padding: 10px 14px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      line-height: 1.8;
+    }
+
+    /* ─── アクセス方法 ─── */
+    .howto-section {
+      padding: var(--section-gap) 0;
+      background: var(--bg-alt);
+    }
+    .howto-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .howto-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .howto-icon {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--green-xlight);
+      color: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .howto-title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .howto-time-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green);
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      padding: 4px 12px;
+      border-radius: 2px;
+      width: fit-content;
+    }
+    .howto-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    @media (max-width: 768px) {
+      .access-inner { grid-template-columns: 1fr; }
+      .howto-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html" style="color:var(--text);font-weight:500;">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Access</span>
+      <h1 class="page-hero-title">アクセス</h1>
+      <p class="page-hero-sub">新千歳空港・札幌から車で約90分。ニセコ・ルスツ・洞爺湖の拠点に。</p>
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>アクセス</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 施設切替タブ -->
+  <div class="prop-tab-bar">
+    <div class="container">
+      <div class="prop-tabs">
+        <button class="prop-tab active" data-prop="suzukawa">SISUMO 鈴川（喜茂別町）</button>
+        <button class="prop-tab" data-prop="kombu">SISUMO 昆布（蘭越町）</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 鈴川 アクセス -->
+  <section class="property-access-block active" id="access-suzukawa">
+    <div class="container">
+      <span class="section-label">Suzukawa</span>
+      <h2 class="section-title">SISUMO 鈴川</h2>
+      <p style="font-size:13px;color:var(--text-muted);">北海道虻田郡喜茂別町</p>
+      <div class="access-inner">
+        <div class="map-embed">Google Maps 埋め込み（SISUMO 鈴川周辺）</div>
+        <div class="access-details">
+          <div class="address-box">
+            <div class="address-label">所在地</div>
+            <div class="address-text">北海道虻田郡喜茂別町<br><span style="font-size:12px;color:var(--text-light);">詳細住所はGoogle Mapsにてご確認いただけます</span></div>
+          </div>
+          <div>
+            <p class="dist-section-label">周辺スポットまでの距離</p>
+            <div class="dist-list">
+              <div class="dist-item"><span class="dist-place">尻別川</span><span class="dist-time walk">徒歩1分</span></div>
+              <div class="dist-item"><span class="dist-place">ルスツリゾート</span><span class="dist-time">車で約9〜10分</span></div>
+              <div class="dist-item"><span class="dist-place">洞爺湖</span><span class="dist-time">車で約30分</span></div>
+              <div class="dist-item"><span class="dist-place">ニセコ（アンヌプリ）</span><span class="dist-time">車で約30分</span></div>
+              <div class="dist-item"><span class="dist-place">新千歳空港</span><span class="dist-time">車で約90分</span></div>
+              <div class="dist-item"><span class="dist-place">札幌市内</span><span class="dist-time">車で約90分</span></div>
+            </div>
+          </div>
+          <div class="parking-box"><i class="ti ti-car"></i>無料駐車場あり（敷地内）</div>
+          <p class="caution-box">
+            <i class="ti ti-alert-triangle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+            送迎はございません。レンタカーのご利用をおすすめします。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 昆布 アクセス -->
+  <section class="property-access-block" id="access-kombu">
+    <div class="container">
+      <span class="section-label">Kombu</span>
+      <h2 class="section-title">SISUMO 昆布</h2>
+      <p style="font-size:13px;color:var(--text-muted);">北海道磯谷郡蘭越町</p>
+      <div class="access-inner">
+        <div class="map-embed">Google Maps 埋め込み（SISUMO 昆布周辺）</div>
+        <div class="access-details">
+          <div class="address-box">
+            <div class="address-label">所在地</div>
+            <div class="address-text">北海道磯谷郡蘭越町<br><span style="font-size:12px;color:var(--text-light);">住宅地に立地しています。詳細住所は予約確定後にご案内します</span></div>
+          </div>
+          <div>
+            <p class="dist-section-label">周辺スポットまでの距離</p>
+            <div class="dist-list">
+              <div class="dist-item"><span class="dist-place">幽泉閣（温泉）</span><span class="dist-time walk">徒歩3分</span></div>
+              <div class="dist-item"><span class="dist-place">ニセコアンヌプリスキー場</span><span class="dist-time">車で約10分</span></div>
+              <div class="dist-item"><span class="dist-place">ニセコグラン・ヒラフ</span><span class="dist-time">車で約15分</span></div>
+              <div class="dist-item"><span class="dist-place">ルスツリゾート</span><span class="dist-time">車で約35分</span></div>
+              <div class="dist-item"><span class="dist-place">洞爺湖</span><span class="dist-time">車で約45分</span></div>
+              <div class="dist-item"><span class="dist-place">新千歳空港</span><span class="dist-time">車で約90分</span></div>
+            </div>
+          </div>
+          <div class="parking-box"><i class="ti ti-car"></i>無料駐車場あり（敷地内）</div>
+          <p class="caution-box">
+            <i class="ti ti-alert-triangle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+            送迎はございません。レンタカーのご利用をおすすめします。<br>
+            住宅地に立地しています。深夜・早朝は静かにお過ごしください。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- アクセス方法 -->
+  <section class="howto-section">
+    <div class="container">
+      <span class="section-label">How to Get There</span>
+      <h2 class="section-title">アクセス方法</h2>
+      <div class="howto-grid">
+        <div class="howto-card">
+          <div class="howto-icon"><i class="ti ti-plane"></i></div>
+          <div class="howto-title">飛行機でお越しの方</div>
+          <span class="howto-time-tag"><i class="ti ti-clock" style="font-size:12px;"></i>新千歳空港から約90分</span>
+          <p class="howto-desc">新千歳空港でレンタカーを借り、道央自動車道経由でお越しください。東京・大阪からは約1.5〜2時間のフライトで、国内各都市から直行便が豊富です。</p>
+        </div>
+        <div class="howto-card">
+          <div class="howto-icon"><i class="ti ti-train"></i></div>
+          <div class="howto-title">電車・バスでお越しの方</div>
+          <span class="howto-time-tag"><i class="ti ti-clock" style="font-size:12px;"></i>札幌駅から約90分</span>
+          <p class="howto-desc">JR札幌駅からバスで喜茂別・蘭越方面へ向かうルートがあります。ただし本数が少なく不便なため、レンタカーを強くおすすめします。</p>
+        </div>
+        <div class="howto-card">
+          <div class="howto-icon"><i class="ti ti-car"></i></div>
+          <div class="howto-title">車でお越しの方</div>
+          <span class="howto-time-tag"><i class="ti ti-clock" style="font-size:12px;"></i>札幌から約90分</span>
+          <p class="howto-desc">道央自動車道「喜茂別IC」または「虻田洞爺湖IC」が最寄りです。駐車場は無料でご利用いただけます。住所はGoogle Mapsにてご確認ください。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Reservation</span>
+      <h2 class="section-title" style="color:var(--white);">ご予約・お問い合わせ</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">アクセスについてご不明な点はお気軽にお問い合わせください。</p>
+      <div class="btn-actions">
+        <a href="booking.html" class="btn btn-outline-white btn-lg">仮予約フォームへ</a>
+        <a href="contact.html" class="btn btn-outline-white btn-lg">お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.prop-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.prop-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.property-access-block').forEach(b => b.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('access-' + tab.dataset.prop).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,602 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>施設一覧 | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── ページヒーロー ─── */
+    .page-hero {
+      height: 220px;
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 40px;
+      position: relative;
+    }
+    .page-hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+    .page-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .page-hero p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .page-hero .breadcrumb {
+      position: absolute;
+      bottom: 16px;
+      left: 40px;
+    }
+
+    /* ─── フィルターバー ─── */
+    .filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      position: sticky;
+      top: 68px;
+      z-index: 10;
+    }
+    .filter-bar-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin-right: 4px;
+    }
+    .filter-btn {
+      font-size: 11px;
+      border: 1px solid var(--border);
+      padding: 5px 14px;
+      color: var(--text-muted);
+      background: var(--white);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-sans);
+    }
+    .filter-btn:hover { border-color: var(--green); color: var(--green); }
+    .filter-btn.active {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+    }
+
+    /* ─── 横長カード ─── */
+    .properties-list {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .property-card-h {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: box-shadow var(--transition);
+    }
+    .property-card-h:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    .property-image-h {
+      position: relative;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      min-height: 300px;
+    }
+    .property-image-h img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .property-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--green);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .property-body-h {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .property-header-h {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .property-location-h {
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+    }
+    .property-name-h {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .property-tags-h {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag-highlight {
+      font-size: 11px;
+      background: var(--green-xlight);
+      color: var(--green);
+      border: 1px solid var(--green-light);
+      padding: 3px 10px;
+      border-radius: 2px;
+      font-weight: 500;
+    }
+    .property-desc-h {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+    .property-specs-h {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .spec-box {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .spec-val {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .spec-key {
+      font-size: 10px;
+      color: var(--text-light);
+      margin-top: 4px;
+      letter-spacing: 0.03em;
+    }
+    .property-review-h {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-alt);
+      border-left: 2px solid var(--green);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      line-height: 1.7;
+    }
+    .property-cta-h {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    /* ─── 伏見 Coming Soon ─── */
+    .fushimi-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      opacity: 0.65;
+      background: var(--white);
+    }
+    .fushimi-image {
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+      min-height: 220px;
+    }
+    .fushimi-body {
+      padding: 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .fushimi-coming-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 2px;
+      width: fit-content;
+    }
+    .fushimi-name {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .fushimi-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.85;
+    }
+    .fushimi-specs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .fushimi-spec {
+      font-size: 11px;
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      color: var(--text-muted);
+      border-radius: 2px;
+    }
+    .fushimi-link {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .property-card-h { grid-template-columns: 1fr; }
+      .property-image-h { min-height: 240px; }
+      .fushimi-card { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .page-hero .breadcrumb { left: 20px; }
+      .filter-bar-inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html" style="color:var(--text);font-weight:500;">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- ========== PAGE HERO ========== -->
+  <div class="page-hero">
+    <p class="page-hero-eyebrow">Our Properties</p>
+    <h1>施設一覧</h1>
+    <p>一棟まるごと、あなただけの北海道滞在を。</p>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">HOME</a>
+      <span class="breadcrumb-sep"> › </span>
+      <span>施設一覧</span>
+    </nav>
+  </div>
+
+  <!-- ========== FILTER BAR ========== -->
+  <div class="filter-bar">
+    <div class="filter-bar-inner">
+      <span class="filter-label">絞り込み：</span>
+      <button class="filter-btn active" data-filter="all">すべて</button>
+      <button class="filter-btn" data-filter="pet">ペット可</button>
+      <button class="filter-btn" data-filter="ski">スキー・スノーボード向け</button>
+      <button class="filter-btn" data-filter="bbq">BBQプランあり</button>
+      <button class="filter-btn" data-filter="onsen">温泉近く</button>
+    </div>
+  </div>
+
+  <!-- ========== PROPERTIES ========== -->
+  <section class="section">
+    <div class="container">
+      <div class="properties-list">
+
+        <!-- 鈴川 -->
+        <div class="property-card-h" data-tags="pet bbq">
+          <div class="property-image-h">
+            <img src="img/suzukawa/suzukawa-7.jpg" alt="SISUMO鈴川" style="width:100%;height:100%;object-fit:cover;">
+            <span class="property-badge">運営中</span>
+          </div>
+          <div class="property-body-h">
+            <div class="property-header-h">
+              <p class="property-location-h">北海道虻田郡喜茂別町</p>
+              <h2 class="property-name-h">SISUMO 鈴川</h2>
+            </div>
+            <div class="property-tags-h">
+              <span class="tag-highlight"><i class="ti ti-star" style="font-size:11px;vertical-align:-1px;"></i> 5.0（36件）</span>
+              <span class="tag-highlight">ゲストチョイス上位5%</span>
+              <span class="tag">一棟貸切</span>
+              <span class="tag">ペット可</span>
+              <span class="tag">BBQプランあり</span>
+              <span class="tag">焚き火</span>
+              <span class="tag">古民家リノベ</span>
+            </div>
+            <p class="property-desc-h">
+              古民家を改修した一棟貸しの宿。目の前に羊蹄山・尻別岳、徒歩1分に尻別川。
+              新設ウッドデッキでBBQと焚き火を楽しめます。ルスツリゾートまで車で約9〜10分。
+            </p>
+            <div class="property-specs-h">
+              <div class="spec-box">
+                <div class="spec-val">最大8名</div>
+                <div class="spec-key">宿泊人数</div>
+              </div>
+              <div class="spec-box">
+                <div class="spec-val">3寝室</div>
+                <div class="spec-key">寝室数</div>
+              </div>
+              <div class="spec-box">
+                <div class="spec-val">86㎡</div>
+                <div class="spec-key">建物面積</div>
+              </div>
+            </div>
+            <div class="property-review-h">
+              「羊蹄山を眺めながらのBBQが最高でした。子どもたちも川遊びを楽しみ、また絶対に来たいと思える宿です。」
+            </div>
+            <div class="property-cta-h">
+              <a href="suzukawa.html" class="btn btn-primary">詳しく見る</a>
+              <a href="booking.html" class="btn btn-outline">仮予約する</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 昆布 -->
+        <div class="property-card-h" data-tags="ski onsen">
+          <div class="property-image-h">
+            <img src="img/kombu/kombu-3.jpg" alt="SISUMO昆布" style="width:100%;height:100%;object-fit:cover;object-position:42% center;">
+            <span class="property-badge">運営中</span>
+          </div>
+          <div class="property-body-h">
+            <div class="property-header-h">
+              <p class="property-location-h">北海道磯谷郡蘭越町</p>
+              <h2 class="property-name-h">SISUMO 昆布</h2>
+            </div>
+            <div class="property-tags-h">
+              <span class="tag-highlight"><i class="ti ti-star" style="font-size:11px;vertical-align:-1px;"></i> 4.95（22件）</span>
+              <span class="tag-highlight">ゲストチョイス</span>
+              <span class="tag">一棟貸切</span>
+              <span class="tag">スキー向け</span>
+              <span class="tag">温泉徒歩3分</span>
+              <span class="tag">ペット可</span>
+              <span class="tag">長期滞在対応</span>
+            </div>
+            <p class="property-desc-h">
+              ニセコアンヌプリスキー場まで車で10分のスキー拠点。
+              老舗温泉「幽泉閣」へ徒歩3分。キッチン・洗濯設備完備で長期滞在やワーケーションにも対応します。
+            </p>
+            <div class="property-specs-h">
+              <div class="spec-box">
+                <div class="spec-val">最大8名</div>
+                <div class="spec-key">宿泊人数</div>
+              </div>
+              <div class="spec-box">
+                <div class="spec-val">3寝室</div>
+                <div class="spec-key">寝室数</div>
+              </div>
+              <div class="spec-box">
+                <div class="spec-val">温泉<br>徒歩3分</div>
+                <div class="spec-key">周辺環境</div>
+              </div>
+            </div>
+            <div class="property-review-h">
+              「ニセコスキーの拠点として利用。温泉まで徒歩3分はありがたかったです。広いリビングで仲間と食事できてリゾートホテルとは違う温かみがありました。」
+            </div>
+            <div class="property-cta-h">
+              <a href="kombu.html" class="btn btn-primary">詳しく見る</a>
+              <a href="booking.html" class="btn btn-outline">仮予約する</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 伏見 Coming Soon -->
+        <div class="fushimi-card">
+          <div class="fushimi-image">
+            <img src="img/common/yotei-summer.jpg" alt="SISUMO伏見 イメージ" style="width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(0.75);">
+          </div>
+          <div class="fushimi-body">
+            <span class="fushimi-coming-badge">
+              <i class="ti ti-clock" style="font-size:12px;"></i>
+              COMING SOON — 2026年開業予定
+            </span>
+            <p class="fushimi-name">SISUMO 伏見</p>
+            <p class="fushimi-desc">
+              喜茂別町伏見に誕生するSISUMO最大規模の一棟貸し宿施設。
+              最大10名・全5室・約155㎡。冬のスキー滞在から夏の家族旅行まで、
+              新しい北海道滞在体験をお届けします。
+            </p>
+            <div class="fushimi-specs">
+              <span class="fushimi-spec">最大10名</span>
+              <span class="fushimi-spec">全5室</span>
+              <span class="fushimi-spec">約155㎡</span>
+              <span class="fushimi-spec">駐車場4台</span>
+            </div>
+            <a href="fushimi.html" class="fushimi-link">
+              施設詳細を見る <i class="ti ti-arrow-right" style="font-size:12px;"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Reservation</span>
+      <h2 class="section-title" style="color:var(--white);">ご予約・お問い合わせ</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">
+        ご希望の日程・人数を仮予約フォームにご入力ください。<br>
+        空室を確認の上、メールでご連絡いたします。
+      </p>
+      <div class="btn-actions">
+        <a href="booking.html" class="btn btn-outline-white btn-lg">仮予約フォームへ</a>
+        <a href="contact.html" class="btn btn-outline-white btn-lg">お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== JS: フィルター ========== -->
+  <script>
+    const btns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.property-card-h');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+        cards.forEach(card => {
+          if (filter === 'all') {
+            card.style.display = '';
+          } else {
+            const tags = card.dataset.tags || '';
+            card.style.display = tags.includes(filter) ? '' : 'none';
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

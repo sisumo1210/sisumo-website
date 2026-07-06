@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISUMO | 北海道・後志エリアの一棟貸し宿</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="hero-slides">
+      <div class="hero-slide">
+        <img src="img/common/yotei-winter.jpg" alt="羊蹄山の雪景色" style="width:100%;height:100%;object-fit:cover;object-position:center;">
+      </div>
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Hokkaido Private Villa · Kimobetsu &amp; Rankoshi</p>
+      <h1 class="hero-title">北海道の自然の中で、<br>家族だけの時間を。</h1>
+      <p class="hero-sub">後志エリアに佇む一棟貸しの宿。<br>羊蹄山を望む大自然と、温かみのある空間で過ごす特別な滞在。</p>
+      <div class="hero-actions">
+        <a href="booking.html" class="btn btn-primary btn-lg">空き状況を確認する</a>
+        <a href="properties.html" class="btn btn-outline-white btn-lg">宿を見る</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+
+    <div class="hero-dots">
+      <div class="hero-dot active"></div>
+      <div class="hero-dot"></div>
+      <div class="hero-dot"></div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES ========== -->
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">Why SISUMO</span>
+        <h2 class="section-title">SISUMOが選ばれる理由</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="ti ti-home-2"></i>
+          </div>
+          <h3 class="feature-title">一棟貸し切り</h3>
+          <p class="feature-desc">他のゲストを気にせず、グループ全員でプライベートな空間を独占。家族・友人との特別な時間を。</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="ti ti-mountain"></i>
+          </div>
+          <h3 class="feature-title">圧倒的な自然環境</h3>
+          <p class="feature-desc">羊蹄山・尻別岳を望む絶景。徒歩1分に尻別川。ルスツ・ニセコ・洞爺湖へも短時間でアクセス。</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="ti ti-star"></i>
+          </div>
+          <h3 class="feature-title">Airbnb 評価 5.0</h3>
+          <p class="feature-desc">全36件のレビューで平均5.0。清潔さ・ホスピタリティ・価値すべてにおいてゲストから高評価を獲得。</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="ti ti-paw"></i>
+          </div>
+          <h3 class="feature-title">ペット・大型犬 歓迎</h3>
+          <p class="feature-desc">大型犬も一緒に泊まれる宿。大切な家族の一員と、北海道の大自然を思いきり楽しんでください。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROPERTIES ========== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Our Properties</span>
+        <h2 class="section-title">宿一覧</h2>
+        <p class="section-desc">北海道・後志エリアに展開する3つの一棟貸し宿。それぞれ異なる魅力をもつ空間です。</p>
+      </div>
+      <div class="property-grid">
+
+        <!-- 鈴川 -->
+        <div class="property-card">
+          <div class="property-card-image">
+            <img src="img/suzukawa/suzukawa-7.jpg" alt="SISUMO鈴川" style="width:100%;height:100%;object-fit:cover;">
+            <span class="property-card-badge">運営中</span>
+          </div>
+          <div class="property-card-body">
+            <p class="property-card-location">北海道 喜茂別町</p>
+            <h3 class="property-card-name">SISUMO 鈴川</h3>
+            <p class="property-card-desc">羊蹄山を一望する古民家を改修した一棟貸し宿。ウッドデッキでのBBQ、焚き火、星空が楽しめます。</p>
+            <div class="property-card-tags">
+              <span class="tag">最大8名</span>
+              <span class="tag">BBQプラン</span>
+              <span class="tag">ペット可</span>
+              <span class="tag">ルスツ9分</span>
+            </div>
+            <div class="property-card-footer">
+              <div class="property-card-price">
+                <strong>¥35,000</strong>〜 / 泊
+              </div>
+              <a href="suzukawa.html" class="btn btn-outline" style="padding:8px 18px;font-size:12px;">詳細を見る</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 昆布 -->
+        <div class="property-card">
+          <div class="property-card-image">
+            <img src="img/kombu/kombu-3.jpg" alt="SISUMO昆布" style="width:100%;height:100%;object-fit:cover;">
+            <span class="property-card-badge">運営中</span>
+          </div>
+          <div class="property-card-body">
+            <p class="property-card-location">北海道 蘭越町</p>
+            <h3 class="property-card-name">SISUMO 昆布</h3>
+            <p class="property-card-desc">幽泉閣温泉まで徒歩3分。ニセコスキーと温泉を組み合わせた冬旅の拠点として最適な一棟貸し宿。</p>
+            <div class="property-card-tags">
+              <span class="tag">最大8名</span>
+              <span class="tag">温泉徒歩3分</span>
+              <span class="tag">ペット可</span>
+              <span class="tag">ニセコ10分</span>
+            </div>
+            <div class="property-card-footer">
+              <div class="property-card-price">
+                <strong>¥32,000</strong>〜 / 泊
+              </div>
+              <a href="kombu.html" class="btn btn-outline" style="padding:8px 18px;font-size:12px;">詳細を見る</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 伏見 -->
+        <div class="property-card coming-soon">
+          <div class="property-card-image">
+            <img src="img/common/yotei-summer.jpg" alt="SISUMO伏見 イメージ" style="width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(0.75);">
+            <span class="property-card-badge coming">2026 OPEN</span>
+          </div>
+          <div class="property-card-body">
+            <p class="property-card-location">北海道 （エリア未定）</p>
+            <h3 class="property-card-name">SISUMO 伏見</h3>
+            <p class="property-card-desc">SISUMOブランドを象徴する最大規模の一棟貸し宿施設。2026年オープン予定です。</p>
+            <div class="property-card-tags">
+              <span class="tag">最大12名</span>
+              <span class="tag">Coming Soon</span>
+            </div>
+            <div class="property-card-footer">
+              <div class="coming-soon-badge">
+                <i class="ti ti-clock" style="font-size:12px;"></i>
+                2026年オープン予定
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== AREA ACCESS ========== -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="access-teaser">
+        <div>
+          <span class="section-label">Access</span>
+          <h2 class="section-title">主要観光地へのアクセス</h2>
+          <p class="section-desc">後志エリアを拠点に、北海道の代表的な観光スポットへ快適にアクセスできます。</p>
+          <div class="access-points">
+            <div class="access-point">
+              <div class="access-point-icon"><i class="ti ti-ski-jumping"></i></div>
+              <div class="access-point-text">
+                <strong>ルスツリゾート</strong>
+                <span>鈴川から車で約9〜10分</span>
+              </div>
+            </div>
+            <div class="access-point">
+              <div class="access-point-icon"><i class="ti ti-mountain"></i></div>
+              <div class="access-point-text">
+                <strong>ニセコ各スキー場</strong>
+                <span>昆布から車で約10分 / 鈴川から約30分</span>
+              </div>
+            </div>
+            <div class="access-point">
+              <div class="access-point-icon"><i class="ti ti-ripple"></i></div>
+              <div class="access-point-text">
+                <strong>洞爺湖</strong>
+                <span>両施設から車で約30分</span>
+              </div>
+            </div>
+            <div class="access-point">
+              <div class="access-point-icon"><i class="ti ti-plane"></i></div>
+              <div class="access-point-text">
+                <strong>新千歳空港 / 札幌市内</strong>
+                <span>車で約90分</span>
+              </div>
+            </div>
+          </div>
+          <a href="access.html" class="btn btn-outline">アクセス詳細を見る</a>
+        </div>
+        <div class="access-map-placeholder">
+          MAP PLACEHOLDER<br><span style="font-size:11px;margin-top:6px;display:block;">後志エリア地図</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== REVIEWS ========== -->
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">Guest Reviews</span>
+        <h2 class="section-title">ゲストの声</h2>
+        <p class="section-desc">Airbnbに寄せられたゲストのレビューから、一部をご紹介します。</p>
+      </div>
+      <div class="review-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">「羊蹄山を眺めながらのBBQは最高でした。子どもたちも川遊びを楽しみ、家族全員が大満足。清潔でおしゃれな宿に大人も大興奮。また来たいです！」</p>
+          <p class="review-meta">— ゲスト（SISUMO鈴川）</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">「温泉まで歩いて3分は最高。ニセコスキー帰りに疲れた体を癒せました。一棟貸しなので子連れでも気を遣わず過ごせて、本当にゆったりできました。」</p>
+          <p class="review-meta">— ゲスト（SISUMO昆布）</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">「愛犬と一緒に泊まれる宿を探していて見つけました。広い庭で犬も思い切り走れて、焚き火を囲みながら星空を眺める時間は格別でした。」</p>
+          <p class="review-meta">— ゲスト（SISUMO鈴川）</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:40px;">
+        <p style="font-size:13px;color:var(--text-muted);">Airbnb 総合評価 <strong style="color:var(--text);">5.0</strong>（鈴川 36件 / 昆布 22件）</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ EXCERPT ========== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">よくある質問</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-question">
+            チェックインの時間は何時ですか？
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              チェックインは15:00〜、チェックアウトは10:00です。セルフチェックインに対応しており、事前にご案内するコードで鍵を開けていただけます。時間外チェックインはご相談ください。
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            ペットは連れて行けますか？
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              はい、ペット同伴での宿泊が可能です（大型犬も歓迎）。ペット受入料金として4,000円（税込）／頭・泊をいただいています。最大2頭まで対応しています。
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            直接予約とAirbnbではどちらが安いですか？
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              当サイトからの直接予約が最もお得です。Airbnbはサービス手数料が加算されるため、同じ条件でも直接予約の方が安くなります。さらに連泊割引・早割なども直接予約限定で適用されます。
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            レンタカーは必要ですか？
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              はい、レンタカーをご用意されることを強くお勧めします。両施設とも公共交通機関でのアクセスが難しく、観光地やスーパーへの移動にも車が必要です。新千歳空港のレンタカーショップのご利用が便利です。
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:40px;">
+        <a href="faq.html" class="btn btn-outline">よくある質問をすべて見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA BANNER ========== -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label">Direct Booking</span>
+      <h2 class="section-title">直接予約で、より特別な滞在を</h2>
+      <p>当サイトからのご予約が最もお得。連泊割引・早割など、直接予約限定の特典をご用意しています。</p>
+      <div class="btn-actions">
+        <a href="booking.html" class="btn btn-outline-white btn-lg">空き状況を確認・予約する</a>
+        <a href="contact.html" class="btn btn-outline-white btn-lg">お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== JS ========== -->
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

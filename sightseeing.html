@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>周辺観光 | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── シーズンタブ ─── */
+    .season-tab-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 68px;
+      z-index: 90;
+    }
+    .season-tabs {
+      display: flex;
+    }
+    .season-tab {
+      flex: 1;
+      padding: 13px 12px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+      white-space: nowrap;
+    }
+    .season-tab:hover { color: var(--text); }
+    .season-tab.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+      font-weight: 500;
+    }
+
+    /* ─── スポットカード ─── */
+    .spots-section {
+      padding: var(--section-gap) 0;
+    }
+    .spot-list { display: flex; flex-direction: column; gap: 24px; }
+    .spot-card {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--white);
+      transition: box-shadow 0.2s;
+    }
+    .spot-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .spot-image {
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 13px;
+      min-height: 200px;
+    }
+    .spot-body {
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .spot-name {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .spot-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .spot-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: var(--bg);
+    }
+    .spot-tag.winter {
+      border-color: #B8D0E8;
+      color: #2A5A8A;
+      background: #EEF4FB;
+    }
+    .spot-tag.summer {
+      border-color: #A8D0A8;
+      color: #2A6A2A;
+      background: #EEF8EE;
+    }
+    .spot-tag.all {
+      border-color: #D8C080;
+      color: #6A5010;
+      background: #FDF6E3;
+    }
+    .spot-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      flex: 1;
+    }
+    .spot-distance {
+      font-size: 12px;
+      color: var(--text-light);
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ─── 自然・アクティビティ ─── */
+    .nature-section {
+      padding: var(--section-gap) 0;
+      background: var(--bg-alt);
+    }
+    .nature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .nature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .nature-image {
+      height: 160px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 13px;
+    }
+    .nature-body { padding: 18px; }
+    .nature-name {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .nature-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* ─── シーズン別 ─── */
+    .season-guide-section {
+      padding: var(--section-gap) 0;
+    }
+    .season-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+    .season-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px 18px;
+      background: var(--white);
+    }
+    .season-name {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .season-period {
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+    .season-activities { display: flex; flex-direction: column; gap: 6px; }
+    .season-activity {
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+    }
+
+    @media (max-width: 768px) {
+      .spot-card { grid-template-columns: 1fr; }
+      .nature-grid { grid-template-columns: 1fr; }
+      .season-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html" style="color:var(--text);font-weight:500;">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Sightseeing</span>
+      <h1 class="page-hero-title">周辺観光</h1>
+      <p class="page-hero-sub">ニセコ・ルスツ・洞爺湖へ。北海道後志エリアの魅力を満喫。</p>
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>周辺観光</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- シーズンタブ -->
+  <div class="season-tab-bar">
+    <div class="container">
+      <div class="season-tabs">
+        <button class="season-tab active" data-season="all">すべて</button>
+        <button class="season-tab" data-season="winter">冬（スキー・スノー）</button>
+        <button class="season-tab" data-season="summer">夏・春・秋（アウトドア）</button>
+        <button class="season-tab" data-season="year">通年</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- スポット一覧 -->
+  <section class="spots-section">
+    <div class="container">
+      <span class="section-label">Spots</span>
+      <h2 class="section-title">主要観光スポット</h2>
+      <div class="spot-list">
+
+        <div class="spot-card" data-seasons="winter summer">
+          <div class="spot-image"><img src="img/common/sightseeing/rusutsu.jpg" alt="ルスツリゾート" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="spot-body">
+            <div class="spot-name">ルスツリゾート</div>
+            <div class="spot-tags">
+              <span class="spot-tag winter">冬：スキー・スノーボード</span>
+              <span class="spot-tag summer">夏：遊園地・ゴルフ</span>
+              <span class="spot-tag">鈴川から車で約10分</span>
+            </div>
+            <p class="spot-desc">北海道最大級のオールシーズンリゾート。冬は3つの山を結ぶ広大なスキーエリア、夏は遊園地・ゴルフ・乗馬など家族で楽しめるアクティビティが充実。SISUMOから最も近い主要リゾートです。</p>
+            <div class="spot-distance"><i class="ti ti-map-pin" style="font-size:13px;color:var(--green);"></i>SISUMO鈴川から車で約9〜10分 ／ SISUMO昆布から車で約35分</div>
+          </div>
+        </div>
+
+        <div class="spot-card" data-seasons="winter summer">
+          <div class="spot-image"><img src="img/common/sightseeing/ski.jpg" alt="ニセコ" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="spot-body">
+            <div class="spot-name">ニセコ</div>
+            <div class="spot-tags">
+              <span class="spot-tag winter">冬：パウダースノー</span>
+              <span class="spot-tag summer">夏：ラフティング・トレッキング</span>
+              <span class="spot-tag">昆布から車で約10分〜</span>
+            </div>
+            <p class="spot-desc">世界的に知られるパウダースノーのスノーリゾート。アンヌプリ・グラン・ヒラフ・花園・東山など複数のエリアが集まり、国内外からスキーヤーが訪れます。夏はラフティングや自転車など大自然のアクティビティも豊富。</p>
+            <div class="spot-distance"><i class="ti ti-map-pin" style="font-size:13px;color:var(--green);"></i>SISUMO昆布から車で約10〜15分 ／ SISUMO鈴川から車で約30分</div>
+          </div>
+        </div>
+
+        <div class="spot-card" data-seasons="year summer">
+          <div class="spot-image"><img src="img/common/sightseeing/lake.png" alt="洞爺湖" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="spot-body">
+            <div class="spot-name">洞爺湖</div>
+            <div class="spot-tags">
+              <span class="spot-tag all">通年：温泉・湖畔散策</span>
+              <span class="spot-tag summer">夏：遊覧船・花火</span>
+              <span class="spot-tag">鈴川から車で約30分</span>
+            </div>
+            <p class="spot-desc">北海道を代表する湖と温泉の観光地。湖畔の温泉街、遊覧船、洞爺湖サミット記念館など見どころが多く、通年で楽しめます。夏は湖畔で毎夜花火大会が開催されます。</p>
+            <div class="spot-distance"><i class="ti ti-map-pin" style="font-size:13px;color:var(--green);"></i>SISUMO鈴川・伏見から車で約30分 ／ SISUMO昆布から車で約45分</div>
+          </div>
+        </div>
+
+        <div class="spot-card" data-seasons="summer winter">
+          <div class="spot-image"><img src="img/common/yotei-winter.jpg" alt="羊蹄山" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;"></div>
+          <div class="spot-body">
+            <div class="spot-name">羊蹄山</div>
+            <div class="spot-tags">
+              <span class="spot-tag summer">夏：登山・ハイキング</span>
+              <span class="spot-tag winter">冬：雪景色観賞</span>
+              <span class="spot-tag">鈴川から眺望</span>
+            </div>
+            <p class="spot-desc">「蝦夷富士」とも呼ばれる標高1,898mの独立峰。SISUMO鈴川の宿の前から雄大な姿を眺められます。夏は登山コースも整備されており、山頂からの絶景を目指す登山客が多く訪れます。</p>
+            <div class="spot-distance"><i class="ti ti-map-pin" style="font-size:13px;color:var(--green);"></i>SISUMO鈴川から望める ／ 登山口まで車で約20〜30分</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 自然・アクティビティ -->
+  <section class="nature-section">
+    <div class="container">
+      <span class="section-label">Nature & Activities</span>
+      <h2 class="section-title">自然・アクティビティ</h2>
+      <p style="font-size:14px;color:var(--text-muted);text-align:center;">後志エリアならではの体験を楽しもう</p>
+      <div class="nature-grid">
+        <div class="nature-card">
+          <div class="nature-image"><img src="img/river.png" alt="尻別川" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="nature-body">
+            <div class="nature-name">尻別川</div>
+            <p class="nature-desc">SISUMO鈴川から徒歩1分。ラフティングや釣り、川沿いの散策が楽しめます。</p>
+          </div>
+        </div>
+        <div class="nature-card">
+          <div class="nature-image"><img src="img/common/sightseeing/forest.png" alt="尻別岳" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="nature-body">
+            <div class="nature-name">尻別岳</div>
+            <p class="nature-desc">鈴川の宿の前に広がる山。冬は羊蹄山とともに雪景色が絶景。</p>
+          </div>
+        </div>
+        <div class="nature-card">
+          <div class="nature-image"><img src="img/common/sightseeing/onsen.png" alt="幽泉閣温泉" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="nature-body">
+            <div class="nature-name">幽泉閣（温泉）</div>
+            <p class="nature-desc">SISUMO昆布から徒歩3分の老舗温泉。1958年創業、サウナ・レストラン併設。日帰り入浴10:00〜21:30。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- シーズン別 -->
+  <section class="season-guide-section">
+    <div class="container">
+      <span class="section-label">Season Guide</span>
+      <h2 class="section-title">シーズン別おすすめ</h2>
+      <div class="season-grid">
+        <div class="season-card">
+          <div class="season-name">冬</div>
+          <div class="season-period">12月〜3月</div>
+          <div class="season-activities">
+            <div class="season-activity">ルスツでスキー</div>
+            <div class="season-activity">ニセコパウダー</div>
+            <div class="season-activity">温泉（幽泉閣）</div>
+            <div class="season-activity">雪景色・星空</div>
+          </div>
+        </div>
+        <div class="season-card">
+          <div class="season-name">春</div>
+          <div class="season-period">4月〜5月</div>
+          <div class="season-activities">
+            <div class="season-activity">残雪ハイキング</div>
+            <div class="season-activity">山菜採り</div>
+            <div class="season-activity">湖畔ドライブ</div>
+            <div class="season-activity">静かな田舎の風景</div>
+          </div>
+        </div>
+        <div class="season-card">
+          <div class="season-name">夏</div>
+          <div class="season-period">6月〜8月</div>
+          <div class="season-activities">
+            <div class="season-activity">ルスツ遊園地</div>
+            <div class="season-activity">尻別川ラフティング</div>
+            <div class="season-activity">洞爺湖花火</div>
+            <div class="season-activity">羊蹄山登山</div>
+          </div>
+        </div>
+        <div class="season-card">
+          <div class="season-name">秋</div>
+          <div class="season-period">9月〜11月</div>
+          <div class="season-activities">
+            <div class="season-activity">紅葉ドライブ</div>
+            <div class="season-activity">芋掘り・収穫体験</div>
+            <div class="season-activity">ゴルフ</div>
+            <div class="season-activity">温泉</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Reservation</span>
+      <h2 class="section-title" style="color:var(--white);">観光の拠点にSISUMOを</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">ニセコ・ルスツ・洞爺湖へのアクセスに便利な一棟貸し宿。<br>まずはお気軽にお問い合わせください。</p>
+      <div class="btn-actions">
+        <a href="properties.html" class="btn btn-outline-white btn-lg">施設一覧を見る</a>
+        <a href="booking.html" class="btn btn-outline-white btn-lg">ご予約・お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.season-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const season = tab.dataset.season;
+        document.querySelectorAll('.spot-card').forEach(card => {
+          if (season === 'all') {
+            card.style.display = '';
+          } else {
+            const seasons = card.dataset.seasons || '';
+            card.style.display = seasons.includes(season) ? '' : 'none';
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+

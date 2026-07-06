@@ -1,0 +1,1023 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ご予約 | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── 予約の流れ ─── */
+    .flow-section {
+      padding: 40px 0;
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+    }
+    .flow-title {
+      text-align: center;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .flow-step {
+      text-align: center;
+      padding: 20px 16px;
+      position: relative;
+    }
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 50%;
+      width: 1px; height: 40px;
+      background: var(--border);
+      transform: translateY(-50%);
+    }
+    .flow-num {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--green-light);
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+    .flow-step-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .flow-step-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ─── 料金表セクション ─── */
+    .price-section {
+      padding: var(--section-gap) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .price-tab {
+      padding: 10px 24px;
+      font-size: 13px;
+      font-family: var(--font-sans);
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.15s;
+    }
+    .price-tab.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+      font-weight: 500;
+    }
+    .price-table-wrap { display: none; }
+    .price-table-wrap.active { display: block; }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .price-table th {
+      background: var(--bg-alt);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+    .price-table th:not(:first-child):not(:nth-child(2)) { text-align: right; }
+    .price-table td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .price-table td:not(:first-child):not(:nth-child(2)) {
+      text-align: right;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .price-table tr:nth-child(even) td { background: var(--bg); }
+    .price-note {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 10px;
+      line-height: 1.8;
+    }
+
+    /* ─── 公式特典 ─── */
+    .benefits-box {
+      border: 2px solid var(--green-light);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      background: var(--green-xlight);
+      margin-top: 28px;
+    }
+    .benefits-title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--green-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .benefit-item {
+      background: var(--white);
+      border: 1px solid var(--green-light);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .benefit-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .benefit-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ─── フォームレイアウト ─── */
+    .booking-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      padding: var(--section-gap) 0;
+      align-items: start;
+    }
+
+    /* ─── フォームブロック ─── */
+    .form-block { margin-bottom: 36px; }
+    .block-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .req-badge {
+      font-size: 10px;
+      background: #D94040;
+      color: var(--white);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+    .opt-badge {
+      font-size: 10px;
+      background: var(--text-light);
+      color: var(--white);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+
+    /* ─── 施設選択 ─── */
+    .prop-select-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .prop-option {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--white);
+    }
+    .prop-option:hover { border-color: var(--green-light); }
+    .prop-option.selected {
+      border-color: var(--green);
+      background: var(--green-xlight);
+    }
+    .prop-option-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .prop-option-sub { font-size: 11px; color: var(--text-muted); }
+
+    /* ─── カレンダー ─── */
+    .calendar-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background: var(--white);
+    }
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .cal-month {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .cal-nav-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.15s;
+    }
+    .cal-nav-btn:hover { border-color: var(--green); color: var(--green); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+    .cal-day-label {
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-light);
+      padding: 4px 0;
+      letter-spacing: 0.04em;
+    }
+    .cal-day {
+      text-align: center;
+      font-size: 12px;
+      padding: 8px 4px;
+      border-radius: var(--radius);
+      background: var(--white);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.1s;
+      color: var(--text);
+    }
+    .cal-day:hover { border-color: var(--green); color: var(--green); }
+    .cal-day.empty { background: none; border-color: transparent; cursor: default; }
+    .cal-day.booked {
+      background: var(--bg-alt);
+      color: var(--text-light);
+      cursor: not-allowed;
+      text-decoration: line-through;
+      border-color: var(--border);
+    }
+    .cal-day.booked:hover { border-color: var(--border); color: var(--text-light); }
+    .cal-day.selected-in {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+      font-weight: 500;
+    }
+    .cal-day.selected-out {
+      background: var(--green-dark);
+      color: var(--white);
+      border-color: var(--green-dark);
+      font-weight: 500;
+    }
+    .cal-day.in-range {
+      background: var(--green-xlight);
+      border-color: var(--green-light);
+      color: var(--green-dark);
+    }
+    .cal-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .legend-box {
+      width: 12px; height: 12px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .cal-note {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 10px;
+    }
+
+    /* ─── フォーム入力 ─── */
+    .form-row { margin-bottom: 16px; }
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      background: var(--white);
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .form-textarea { height: 90px; resize: vertical; }
+    .form-row-half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ─── ペットオプション ─── */
+    .pet-option-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      background: var(--bg);
+      margin-top: 8px;
+    }
+    .pet-option-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .pet-fee-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green-dark);
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 12px;
+    }
+    .pet-checks { display: flex; flex-direction: column; gap: 8px; }
+    .pet-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .pet-check input[type="checkbox"] { accent-color: var(--green); width: 15px; height: 15px; }
+
+    /* ─── 同意ボックス ─── */
+    .consent-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      background: var(--bg);
+      margin-bottom: 24px;
+    }
+    .consent-box-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .consent-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 12px;
+    }
+    .consent-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .consent-check input[type="checkbox"] { accent-color: var(--green); width: 15px; height: 15px; margin-top: 2px; flex-shrink: 0; }
+
+    /* ─── サイドバー ─── */
+    .booking-sidebar-sticky { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 16px; }
+
+    .price-preview-card {
+      border: 2px solid var(--green);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background: var(--white);
+    }
+    .price-preview-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .price-preview-note { font-size: 11px; color: var(--text-light); margin-bottom: 14px; }
+    .price-summary {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+    .price-summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      color: var(--text-muted);
+    }
+    .price-summary-row span:last-child { color: var(--text); font-weight: 500; }
+    .price-breakdown { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: 12px; }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+    .price-row.divider { border-top: 1px solid var(--border); padding-top: 6px; }
+    .price-row.discount span:last-child { color: #2A7A2A; }
+    .price-total {
+      border-top: 2px solid var(--green);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .price-total-label { font-size: 13px; font-weight: 500; color: var(--text); }
+    .price-total-amount { font-family: var(--font-serif); font-size: 22px; font-weight: 500; color: var(--text); }
+    .price-per-person { font-size: 11px; color: var(--text-light); text-align: right; margin-top: 4px; }
+    .price-disclaimer { font-size: 10px; color: var(--text-light); line-height: 1.7; margin-top: 10px; }
+
+    .cancel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .cancel-table th {
+      background: var(--bg-alt);
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: left;
+    }
+    .cancel-table td {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .cancel-table td:last-child { text-align: right; font-weight: 500; }
+    .cancel-table tr:last-child td { color: #B94040; }
+
+    .sidebar-notes {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    @media (max-width: 1024px) {
+      .booking-wrapper { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .flow-steps { grid-template-columns: repeat(2, 1fr); }
+      .prop-select-group { grid-template-columns: 1fr; }
+      .form-row-half { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary" style="color:var(--white);background:var(--green-dark);">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Reservation</span>
+      <h1 class="page-hero-title">ご予約</h1>
+      <p class="page-hero-sub">仮予約フォームに必要事項をご入力ください。空室確認後、メールにてご連絡いたします。</p>
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>ご予約</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 予約の流れ -->
+  <section class="flow-section">
+    <div class="container">
+      <p class="flow-title">ご予約の流れ</p>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">①</div>
+          <div class="flow-step-title">仮予約フォーム送信</div>
+          <div class="flow-step-desc">日程・人数・連絡先を入力して送信</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">②</div>
+          <div class="flow-step-title">空室確認・ご連絡</div>
+          <div class="flow-step-desc">通常1〜2営業日以内にメールにてご連絡</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">③</div>
+          <div class="flow-step-title">クレジットカード決済</div>
+          <div class="flow-step-desc">決済リンクをメールでお送りします（Visa / Master / JCB / Amex）</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">④</div>
+          <div class="flow-step-title">予約確定・案内送付</div>
+          <div class="flow-step-desc">決済完了後に予約確定。チェックイン方法等をご案内</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 料金表 -->
+  <section class="price-section">
+    <div class="container">
+      <span class="section-label">Price</span>
+      <h2 class="section-title">料金表</h2>
+      <div class="price-tabs">
+        <button class="price-tab active" data-price="suzukawa">SISUMO 鈴川</button>
+        <button class="price-tab" data-price="kombu">SISUMO 昆布</button>
+        <button class="price-tab" data-price="fushimi">SISUMO 伏見</button>
+      </div>
+
+      <div class="price-table-wrap active" id="price-suzukawa">
+        <p style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:12px;padding-left:2px;">SISUMO 鈴川 — 宿泊料金（1棟あたり・税込）</p>
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>シーズン</th>
+              <th>期間目安</th>
+              <th>平日（日〜木）</th>
+              <th>金曜</th>
+              <th>土曜・祝前日</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>春ショルダー</td><td style="color:var(--text-light);">4月</td><td>¥28,000</td><td>¥34,000</td><td>¥40,000</td></tr>
+            <tr><td>グリーン通常</td><td style="color:var(--text-light);">5・6・9・10月</td><td>¥32,000</td><td>¥38,000</td><td>¥45,000</td></tr>
+            <tr><td>グリーン繁忙</td><td style="color:var(--text-light);">7・8月</td><td>¥40,000</td><td>¥50,000</td><td>¥60,000</td></tr>
+            <tr><td>特別日</td><td style="color:var(--text-light);">GW・お盆・大型連休</td><td>¥55,000</td><td>¥65,000</td><td>¥75,000</td></tr>
+            <tr><td>秋ショルダー</td><td style="color:var(--text-light);">11月</td><td>¥26,000</td><td>¥32,000</td><td>¥38,000</td></tr>
+            <tr><td>ウィンター通常</td><td style="color:var(--text-light);">12・3月</td><td>¥55,000</td><td>¥65,000</td><td>¥75,000</td></tr>
+            <tr><td>ウィンター繁忙</td><td style="color:var(--text-light);">1・2月</td><td>¥65,000</td><td>¥78,000</td><td>¥88,000</td></tr>
+            <tr><td>冬特別日</td><td style="color:var(--text-light);">年末年始・春節・雪まつり</td><td>¥90,000</td><td>¥100,000</td><td>¥110,000</td></tr>
+          </tbody>
+        </table>
+        <p class="price-note">※ 上記は1棟あたりの料金です（人数問わず）。税込表示。<br>※ BBQプランは別途オプション：4,500円（税込）／名</p>
+      </div>
+
+      <div class="price-table-wrap" id="price-kombu">
+        <p style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:12px;padding-left:2px;">SISUMO 昆布 — 宿泊料金（1棟あたり・税込）</p>
+        <table class="price-table">
+          <thead>
+            <tr><th>シーズン</th><th>期間目安</th><th>平日（日〜木）</th><th>金曜</th><th>土曜・祝前日</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>春ショルダー</td><td style="color:var(--text-light);">4月</td><td>¥28,000</td><td>¥34,000</td><td>¥40,000</td></tr>
+            <tr><td>グリーン通常</td><td style="color:var(--text-light);">5・6・9・10月</td><td>¥32,000</td><td>¥38,000</td><td>¥45,000</td></tr>
+            <tr><td>グリーン繁忙</td><td style="color:var(--text-light);">7・8月</td><td>¥40,000</td><td>¥50,000</td><td>¥60,000</td></tr>
+            <tr><td>ウィンター通常</td><td style="color:var(--text-light);">12・3月</td><td>¥55,000</td><td>¥65,000</td><td>¥75,000</td></tr>
+            <tr><td>ウィンター繁忙</td><td style="color:var(--text-light);">1・2月</td><td>¥65,000</td><td>¥78,000</td><td>¥88,000</td></tr>
+          </tbody>
+        </table>
+        <p class="price-note">※ 上記は1棟あたりの料金です（人数問わず）。税込表示。</p>
+      </div>
+
+      <div class="price-table-wrap" id="price-fushimi">
+        <div style="padding:40px;text-align:center;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius-md);">
+          <p style="font-size:14px;color:var(--text-muted);">SISUMO 伏見は2026年開業予定です。<br>料金は開業前にご案内いたします。</p>
+          <a href="fushimi.html" style="display:inline-block;margin-top:16px;font-size:13px;color:var(--green);border-bottom:1px solid var(--green-light);">SISUMO 伏見 詳細を見る →</a>
+        </div>
+      </div>
+
+      <!-- 公式特典 -->
+      <div class="benefits-box">
+        <div class="benefits-title"><i class="ti ti-star"></i>公式サイト限定特典</div>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <div class="benefit-name">連泊割引</div>
+            <div class="benefit-desc">3〜4泊：5%割引<br>5泊以上：10%割引</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-name">早割</div>
+            <div class="benefit-desc">60日以上前：7%割引<br>30〜59日前：5%割引</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-name">直前割</div>
+            <div class="benefit-desc">7日前以内：15%割引<br>3日前以内：20%割引</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-name">BBQプラン優先受付</div>
+            <div class="benefit-desc">公式予約のみ事前確定可</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-name">チェックイン時間相談</div>
+            <div class="benefit-desc">空室状況によりアーリー／レイト対応可（無料）</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-name">ペット同伴の事前相談</div>
+            <div class="benefit-desc">公式予約では詳細条件を事前に相談可</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- フォーム + サイドバー -->
+  <div class="container">
+    <div class="booking-wrapper">
+
+      <!-- メインフォーム -->
+      <form>
+        <!-- STEP1 施設 -->
+        <div class="form-block">
+          <div class="block-label">
+            <span class="step-badge">1</span>
+            施設を選ぶ
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="prop-select-group">
+            <div class="prop-option selected">
+              <div class="prop-option-name">SISUMO 鈴川</div>
+              <div class="prop-option-sub">喜茂別町 ／ 最大8名 ／ ペット可</div>
+            </div>
+            <div class="prop-option">
+              <div class="prop-option-name">SISUMO 昆布</div>
+              <div class="prop-option-sub">蘭越町 ／ 最大8名 ／ 温泉徒歩3分</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP2 カレンダー -->
+        <div class="form-block">
+          <div class="block-label">
+            <span class="step-badge">2</span>
+            日程を選ぶ
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="calendar-wrap">
+            <div class="cal-header">
+              <button type="button" class="cal-nav-btn">◀ 前月</button>
+              <span class="cal-month">2025年 7月</span>
+              <button type="button" class="cal-nav-btn">翌月 ▶</button>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-day-label">日</div>
+              <div class="cal-day-label">月</div>
+              <div class="cal-day-label">火</div>
+              <div class="cal-day-label">水</div>
+              <div class="cal-day-label">木</div>
+              <div class="cal-day-label">金</div>
+              <div class="cal-day-label">土</div>
+              <div class="cal-day empty"></div>
+              <div class="cal-day empty"></div>
+              <div class="cal-day">1</div>
+              <div class="cal-day">2</div>
+              <div class="cal-day">3</div>
+              <div class="cal-day">4</div>
+              <div class="cal-day">5</div>
+              <div class="cal-day booked">6</div>
+              <div class="cal-day booked">7</div>
+              <div class="cal-day booked">8</div>
+              <div class="cal-day booked">9</div>
+              <div class="cal-day booked">10</div>
+              <div class="cal-day">11</div>
+              <div class="cal-day">12</div>
+              <div class="cal-day selected-in">13</div>
+              <div class="cal-day in-range">14</div>
+              <div class="cal-day in-range">15</div>
+              <div class="cal-day selected-out">16</div>
+              <div class="cal-day">17</div>
+              <div class="cal-day">18</div>
+              <div class="cal-day">19</div>
+              <div class="cal-day">20</div>
+              <div class="cal-day">21</div>
+              <div class="cal-day">22</div>
+              <div class="cal-day">23</div>
+              <div class="cal-day">24</div>
+              <div class="cal-day">25</div>
+              <div class="cal-day booked">26</div>
+              <div class="cal-day booked">27</div>
+              <div class="cal-day booked">28</div>
+              <div class="cal-day booked">29</div>
+              <div class="cal-day booked">30</div>
+              <div class="cal-day">31</div>
+            </div>
+            <div class="cal-legend">
+              <div class="legend-item"><div class="legend-box" style="background:var(--white);"></div>空室</div>
+              <div class="legend-item"><div class="legend-box" style="background:var(--bg-alt);border-color:var(--border);"></div>予約済み</div>
+              <div class="legend-item"><div class="legend-box" style="background:var(--green);border-color:var(--green);"></div>チェックイン日</div>
+              <div class="legend-item"><div class="legend-box" style="background:var(--green-dark);border-color:var(--green-dark);"></div>チェックアウト日</div>
+            </div>
+            <p class="cal-note">チェックイン：15:00〜 ／ チェックアウト：〜10:00（昆布は〜11:00）</p>
+          </div>
+        </div>
+
+        <!-- STEP3 人数・オプション -->
+        <div class="form-block">
+          <div class="block-label">
+            <span class="step-badge">3</span>
+            人数・オプション
+          </div>
+          <div class="form-row">
+            <label class="form-label">宿泊人数 <span class="req-badge">必須</span></label>
+            <select class="form-select">
+              <option value="">人数を選択（1〜8名）</option>
+              <option>1名</option><option>2名</option><option>3名</option>
+              <option>4名</option><option>5名</option><option>6名</option>
+              <option>7名</option><option>8名</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">ペット同伴 <span class="opt-badge">任意</span></label>
+            <div class="pet-option-box">
+              <div class="pet-option-title">SISUMO 鈴川はペット同伴可能です（大型犬も可）</div>
+              <div class="pet-fee-tag">ペット受入料金：4,000円（税込）／ 頭・泊</div>
+              <div class="pet-checks">
+                <label class="pet-check"><input type="checkbox"> ペットを同伴する（1頭）</label>
+                <label class="pet-check"><input type="checkbox"> ペットを同伴する（2頭）</label>
+              </div>
+              <p style="font-size:11px;color:var(--text-light);margin-top:8px;">
+                ※ <a href="faq.html" style="color:var(--green);border-bottom:1px solid var(--green-light);">よくある質問（ペットについて）</a>もご確認ください。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP4 連絡先 -->
+        <div class="form-block">
+          <div class="block-label">
+            <span class="step-badge">4</span>
+            ご連絡先
+          </div>
+          <div class="form-row">
+            <label class="form-label">お名前（代表者） <span class="req-badge">必須</span></label>
+            <input type="text" class="form-input" placeholder="例：山田 太郎">
+          </div>
+          <div class="form-row">
+            <label class="form-label">メールアドレス <span class="req-badge">必須</span></label>
+            <input type="email" class="form-input" placeholder="例：example@email.com">
+          </div>
+          <div class="form-row">
+            <label class="form-label">電話番号 <span class="opt-badge">任意</span></label>
+            <input type="tel" class="form-input" placeholder="例：090-0000-0000">
+          </div>
+          <div class="form-row">
+            <label class="form-label">ご質問・ご要望 <span class="opt-badge">任意</span></label>
+            <textarea class="form-textarea" placeholder="アレルギー、到着時間、その他ご要望がございましたらご記入ください。"></textarea>
+          </div>
+        </div>
+
+        <!-- 同意 -->
+        <div class="consent-box">
+          <div class="consent-box-title">送信前にご確認ください</div>
+          <p class="consent-text">
+            ・仮予約の送信後、空室確認のうえメールにてご連絡いたします（通常1〜2営業日）。<br>
+            ・この時点では予約は確定していません。決済完了をもって予約確定となります。<br>
+            ・キャンセルポリシーは右のサイドバーをご確認ください。
+          </p>
+          <label class="consent-check">
+            <input type="checkbox">
+            キャンセルポリシーおよび注意事項に同意する <span style="color:#D94040;margin-left:4px;">（必須）</span>
+          </label>
+        </div>
+
+        <div style="text-align:center;">
+          <button type="submit" class="btn btn-primary btn-lg" style="min-width:240px;justify-content:center;">仮予約を送信する</button>
+          <p style="font-size:11px;color:var(--text-light);margin-top:10px;">送信後、確認メールが自動送信されます。届かない場合はお問い合わせください。</p>
+        </div>
+      </form>
+
+      <!-- サイドバー -->
+      <div class="booking-sidebar-sticky">
+        <!-- 料金内訳プレビュー -->
+        <div class="price-preview-card">
+          <div class="price-preview-title">料金内訳（参考）</div>
+          <p class="price-preview-note">日程・施設・人数を選ぶと自動で計算されます</p>
+          <div class="price-summary">
+            <div class="price-summary-row"><span>施設</span><span>SISUMO 鈴川</span></div>
+            <div class="price-summary-row"><span>チェックイン</span><span>7月13日（土）</span></div>
+            <div class="price-summary-row"><span>チェックアウト</span><span>7月16日（火）</span></div>
+            <div class="price-summary-row"><span>宿泊数</span><span>3泊</span></div>
+            <div class="price-summary-row"><span>人数</span><span>6名</span></div>
+            <div class="price-summary-row"><span>ペット</span><span>1頭</span></div>
+          </div>
+          <div class="price-breakdown">
+            <div class="price-row"><span>7月13日（土）グリーン繁忙</span><span>¥60,000</span></div>
+            <div class="price-row"><span>7月14日（日）グリーン繁忙</span><span>¥40,000</span></div>
+            <div class="price-row"><span>7月15日（月）グリーン繁忙</span><span>¥40,000</span></div>
+            <div class="price-row divider"><span>宿泊料金 小計</span><span>¥140,000</span></div>
+            <div class="price-row"><span>ペット受入料金（1頭×3泊）</span><span>¥12,000</span></div>
+            <div class="price-row discount"><span>連泊割引（3泊・5%）</span><span>▲¥7,000</span></div>
+          </div>
+          <div class="price-total">
+            <span class="price-total-label">お支払い合計（税込）</span>
+            <span class="price-total-amount">¥145,000</span>
+          </div>
+          <p class="price-per-person">1名あたり 約¥24,167</p>
+          <p class="price-disclaimer">※ この金額は参考金額です。確定金額は空室確認後のメールにてご案内します。<br>※ BBQプランは別途オプションです。</p>
+        </div>
+
+        <!-- キャンセルポリシー -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">キャンセルポリシー</div>
+          <table class="cancel-table">
+            <thead><tr><th>キャンセル日</th><th style="text-align:right;">料金</th></tr></thead>
+            <tbody>
+              <tr><td>31日前まで</td><td>無料</td></tr>
+              <tr><td>30〜15日前</td><td>30%</td></tr>
+              <tr><td>14〜8日前</td><td>50%</td></tr>
+              <tr><td>7〜2日前</td><td>80%</td></tr>
+              <tr><td>前日・当日・無連絡</td><td>100%</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:10px;color:var(--text-light);margin-top:8px;">※ キャンセル料は宿泊料金に対して発生します。</p>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">ご利用にあたって</div>
+          <div class="sidebar-notes">
+            ・チェックイン：15:00〜<br>
+            ・チェックアウト：〜10:00（昆布は〜11:00）<br>
+            ・セルフチェックイン（スタッフ現地常駐なし）<br>
+            ・屋内禁煙<br>
+            ・パーティ等の近隣迷惑行為禁止<br>
+            ・レンタカーのご利用をおすすめします（送迎なし）
+          </div>
+        </div>
+
+        <!-- お問い合わせ -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">ご不明な点は</div>
+          <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">ご不明な点はお気軽にお問い合わせください。</p>
+          <a href="contact.html" class="btn btn-outline" style="width:100%;justify-content:center;font-size:12px;">お問い合わせフォームへ</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 料金表タブ
+    document.querySelectorAll('.price-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.price-table-wrap').forEach(w => w.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('price-' + tab.dataset.price).classList.add('active');
+      });
+    });
+
+    // 施設選択
+    document.querySelectorAll('.prop-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.prop-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+

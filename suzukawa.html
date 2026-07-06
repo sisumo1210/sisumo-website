@@ -1,0 +1,777 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISUMO 鈴川 | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── ギャラリー ─── */
+    .gallery {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 260px 260px;
+      gap: 4px;
+    }
+    .gallery-main { grid-row: 1 / 3; }
+    .gallery-cell {
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      overflow: hidden;
+    }
+    .gallery-cell img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* ─── パンくず ─── */
+    .breadcrumb-bar {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── メイン＋サイドバー ─── */
+    .detail-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 60px;
+      align-items: start;
+      padding: var(--section-gap) 0;
+    }
+
+    /* ─── 物件ヘッダー ─── */
+    .prop-name {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .prop-location {
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .prop-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .badge-gold {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 12px;
+      background: #FDF6E3;
+      color: #7A5F00;
+      border: 1px solid #E8D070;
+      border-radius: 2px;
+    }
+    .prop-tagline {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    /* ─── スペック ─── */
+    .specs-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 28px 0;
+    }
+    .spec-cell {
+      text-align: center;
+      padding: 18px 10px;
+      border-right: 1px solid var(--border);
+    }
+    .spec-cell:last-child { border-right: none; }
+    .spec-cell .spec-val {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .spec-cell .spec-key {
+      font-size: 10px;
+      color: var(--text-light);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── コンテンツブロック ─── */
+    .content-block { margin-bottom: 40px; }
+    .content-block h3 {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-block p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    /* ─── おすすめの過ごし方 ─── */
+    .schedule-list { display:flex; flex-direction:column; gap:12px; }
+    .schedule-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .schedule-time {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      padding: 3px 10px;
+      border-radius: 2px;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+    .schedule-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ─── スキーアクセス ─── */
+    .ski-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .ski-table tr { border-bottom: 1px solid var(--border); }
+    .ski-table tr:last-child { border-bottom: none; }
+    .ski-table td { padding: 10px 12px; color: var(--text-muted); }
+    .ski-table td:first-child { color: var(--text); font-weight: 400; }
+    .ski-table td:last-child { text-align: right; color: var(--green); font-weight: 500; }
+    .ski-note {
+      font-size: 12px;
+      color: #B94040;
+      background: #FDF3F3;
+      border: 1px solid #F5C6C6;
+      border-left: 3px solid #E05050;
+      padding: 8px 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    /* ─── 寝室 ─── */
+    .rooms-list { display:flex; flex-direction:column; gap:10px; }
+    .room-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+    }
+    .room-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--green-light);
+      color: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .room-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+    .room-detail { font-size: 12px; color: var(--text-muted); }
+
+    /* ─── 設備 ─── */
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .amenity-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 8px 10px;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+    }
+    .amenity-item i { color: var(--green); font-size: 15px; flex-shrink: 0; }
+
+    /* ─── BBQプラン ─── */
+    .bbq-box {
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      margin-bottom: 40px;
+    }
+    .bbq-box h3 {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bbq-menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .bbq-item {
+      font-size: 12px;
+      background: var(--white);
+      border: 1px solid var(--green-light);
+      color: var(--green);
+      padding: 4px 12px;
+      border-radius: 2px;
+    }
+    .bbq-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.85;
+      margin-bottom: 12px;
+    }
+    .bbq-price-note {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ─── レビュー ─── */
+    .reviews-list { display:flex; flex-direction:column; gap:16px; }
+
+    /* ─── 注意事項 ─── */
+    .notes-list { display:flex; flex-direction:column; gap:8px; }
+    .note-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .note-item i { color: var(--text-light); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+
+    /* ─── サイドバー ─── */
+    .sidebar-sticky { position: sticky; top: 84px; }
+
+    /* ─── アクセスセクション ─── */
+    .access-section { padding: var(--section-gap) 0; background: var(--bg-alt); }
+    .access-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 32px;
+      align-items: start;
+    }
+    .map-embed {
+      aspect-ratio: 4/3;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 13px;
+      overflow: hidden;
+    }
+    .access-list { display:flex; flex-direction:column; gap:0; }
+    .access-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .access-item:last-child { border-bottom: none; }
+    .access-place { color: var(--text); }
+    .access-dist { color: var(--green); font-weight: 500; font-size: 13px; }
+    .access-warn {
+      font-size: 12px;
+      color: #B94040;
+      background: #FDF3F3;
+      border: 1px solid #F5C6C6;
+      border-left: 3px solid #E05050;
+      padding: 10px 14px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .detail-wrapper { grid-template-columns: 1fr; }
+      .access-inner { grid-template-columns: 1fr; }
+      .gallery { grid-template-rows: 220px 220px; }
+    }
+    @media (max-width: 768px) {
+      .specs-strip { grid-template-columns: repeat(2, 1fr); }
+      .specs-strip .spec-cell:nth-child(2) { border-right: none; }
+      .specs-strip .spec-cell:nth-child(3) { border-top: 1px solid var(--border); }
+      .amenities-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html" style="color:var(--text);font-weight:500;">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- ========== GALLERY ========== -->
+  <div class="gallery">
+    <div class="gallery-cell gallery-main">
+      <img src="img/suzukawa/suzukawa-7.jpg" alt="SISUMO鈴川 メイン" style="width:100%;height:100%;object-fit:cover;object-position:center 60%;">
+    </div>
+    <div class="gallery-cell">
+      <img src="img/suzukawa/suzukawa-23.jpg" alt="SISUMO鈴川" style="width:100%;height:100%;object-fit:cover;object-position:center 60%;">
+    </div>
+    <div class="gallery-cell">
+      <img src="img/suzukawa/suzukawa-31.jpg" alt="SISUMO鈴川" style="width:100%;height:100%;object-fit:cover;object-position:center 60%;">
+    </div>
+  </div>
+
+  <!-- ========== BREADCRUMB ========== -->
+  <div class="breadcrumb-bar">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <a href="properties.html">施設一覧</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>SISUMO 鈴川</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ========== MAIN + SIDEBAR ========== -->
+  <div class="container">
+    <div class="detail-wrapper">
+
+      <!-- MAIN -->
+      <div>
+
+        <!-- 物件ヘッダー -->
+        <div class="prop-name">SISUMO 鈴川</div>
+        <p class="prop-location">北海道虻田郡喜茂別町 ／ 古民家一棟貸し</p>
+        <div class="prop-badges">
+          <span class="badge-gold"><i class="ti ti-star" style="font-size:11px;vertical-align:-1px;"></i> 5.0（36件）</span>
+          <span class="badge-gold">ゲストチョイス上位5%</span>
+          <span class="badge-gold">スーパーホスト</span>
+          <span class="tag">ペット可</span>
+          <span class="tag">旅館業法許可取得済み</span>
+        </div>
+        <p class="prop-tagline">
+          羊蹄山と尻別岳を望む古民家。徒歩1分に尻別川。<br>
+          一棟まるごと貸切で、家族や仲間だけの特別な時間を過ごせます。
+        </p>
+
+        <!-- スペック -->
+        <div class="specs-strip">
+          <div class="spec-cell">
+            <div class="spec-val">最大8名</div>
+            <div class="spec-key">宿泊人数</div>
+          </div>
+          <div class="spec-cell">
+            <div class="spec-val">3寝室</div>
+            <div class="spec-key">寝室数</div>
+          </div>
+          <div class="spec-cell">
+            <div class="spec-val">7ベッド</div>
+            <div class="spec-key">ベッド数</div>
+          </div>
+          <div class="spec-cell">
+            <div class="spec-val">86㎡</div>
+            <div class="spec-key">建物面積</div>
+          </div>
+        </div>
+
+        <!-- 施設説明 -->
+        <div class="content-block">
+          <h3>施設について</h3>
+          <p>
+            SISUMO鈴川は、北海道虻田郡喜茂別町に位置する古民家を改修した一棟貸しの宿です。
+            宿の前には雄大な羊蹄山と尻別岳が広がり、徒歩1分には尻別川が流れています。
+            新設のウッドデッキで朝はコーヒー、昼は読書、夜はBBQと焚き火を楽しめます。
+            ペット同伴可（大型犬も可）、セルフチェックインに対応しています。
+          </p>
+        </div>
+
+        <!-- おすすめの過ごし方 -->
+        <div class="content-block">
+          <h3>おすすめの過ごし方</h3>
+          <div class="schedule-list">
+            <div class="schedule-item">
+              <span class="schedule-time">朝</span>
+              <span class="schedule-desc">羊蹄山を眺めながらウッドデッキでコーヒー</span>
+            </div>
+            <div class="schedule-item">
+              <span class="schedule-time">昼</span>
+              <span class="schedule-desc">ルスツ・洞爺湖・ニセコへドライブ観光</span>
+            </div>
+            <div class="schedule-item">
+              <span class="schedule-time">夕方</span>
+              <span class="schedule-desc">ウッドデッキでBBQ（BBQプランあり）</span>
+            </div>
+            <div class="schedule-item">
+              <span class="schedule-time">夜</span>
+              <span class="schedule-desc">焚き火と満天の星空を楽しむ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- スキーアクセス -->
+        <div class="content-block">
+          <h3>スキー・スノーボードの拠点に</h3>
+          <table class="ski-table">
+            <tr><td>ルスツリゾート</td><td>車で約9〜10分</td></tr>
+            <tr><td>ニセコアンヌプリスキー場</td><td>車で約30分</td></tr>
+            <tr><td>ニセコグラン・ヒラフ</td><td>車で約35分</td></tr>
+          </table>
+          <p class="ski-note">
+            <i class="ti ti-alert-triangle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+            送迎はございません。レンタカーのご利用を強くおすすめします。
+          </p>
+        </div>
+
+        <!-- 寝室構成 -->
+        <div class="content-block">
+          <h3>寝室構成</h3>
+          <div class="rooms-list">
+            <div class="room-item">
+              <div class="room-icon"><i class="ti ti-bed"></i></div>
+              <div>
+                <div class="room-name">1階 洋室</div>
+                <div class="room-detail">ダブルベッド1台 ＋ シングルベッド2台</div>
+              </div>
+            </div>
+            <div class="room-item">
+              <div class="room-icon"><i class="ti ti-bed"></i></div>
+              <div>
+                <div class="room-name">2階 和室A（畳新調）</div>
+                <div class="room-detail">ダブルベッド1台 ＋ シングルベッド2台</div>
+              </div>
+            </div>
+            <div class="room-item">
+              <div class="room-icon"><i class="ti ti-bed"></i></div>
+              <div>
+                <div class="room-name">2階 和室B（畳新調）</div>
+                <div class="room-detail">シングルベッド2台</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 設備 -->
+        <div class="content-block">
+          <h3>設備・アメニティ</h3>
+          <div class="amenities-grid">
+            <div class="amenity-item"><i class="ti ti-tool-kitchen-2"></i>キッチン（3口コンロ）</div>
+            <div class="amenity-item"><i class="ti ti-fridge"></i>冷蔵庫・電子レンジ・炊飯器</div>
+            <div class="amenity-item"><i class="ti ti-soup"></i>調理器具一式</div>
+            <div class="amenity-item"><i class="ti ti-washing-machine"></i>洗濯機</div>
+            <div class="amenity-item"><i class="ti ti-wifi"></i>Wi-Fi</div>
+            <div class="amenity-item"><i class="ti ti-device-tv"></i>80インチスクリーン＋プロジェクター</div>
+            <div class="amenity-item"><i class="ti ti-air-conditioning"></i>セントラル空調</div>
+            <div class="amenity-item"><i class="ti ti-home-2"></i>ウッドデッキ</div>
+            <div class="amenity-item"><i class="ti ti-grill"></i>BBQ機材（プランあり）</div>
+            <div class="amenity-item"><i class="ti ti-campfire"></i>焚き火台</div>
+            <div class="amenity-item"><i class="ti ti-key"></i>セルフチェックイン</div>
+            <div class="amenity-item"><i class="ti ti-paw"></i>ペット同伴可（大型犬可）</div>
+          </div>
+        </div>
+
+        <!-- BBQプラン -->
+        <div class="bbq-box">
+          <h3><i class="ti ti-grill" style="color:var(--green);"></i> BBQプラン（SISUMO鈴川限定）</h3>
+          <div class="bbq-menu">
+            <span class="bbq-item">ルスツ豚</span>
+            <span class="bbq-item">北海道産鶏肉</span>
+            <span class="bbq-item">ソーセージ</span>
+            <span class="bbq-item">ジンギスカン</span>
+            <span class="bbq-item">季節野菜</span>
+            <span class="bbq-item">じゃがバター</span>
+            <span class="bbq-item">おにぎり</span>
+            <span class="bbq-item">BBQ機材一式</span>
+          </div>
+          <p class="bbq-desc">
+            ウッドデッキで北海道の食材をたっぷり楽しめるBBQプランです。
+            食材・機材一式をご用意します。ご予約時にオプションとしてお選びください。
+          </p>
+          <p class="bbq-price-note">料金：お問い合わせフォームよりご確認ください（人数に応じてご案内）</p>
+        </div>
+
+        <!-- ゲストの声 -->
+        <div class="content-block">
+          <h3>ゲストの声</h3>
+          <div class="reviews-list">
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">「清潔感があり、設備も充実。羊蹄山の景色が最高でした。また絶対来たいです。」</p>
+              <p class="review-meta">家族旅行（2024年夏）</p>
+            </div>
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">「BBQプランを利用しました。北海道の食材が豊富で大満足。ウッドデッキからの眺めも最高。」</p>
+              <p class="review-meta">友人グループ（2024年秋）</p>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <a href="https://www.airbnb.jp/" target="_blank" rel="noopener" style="font-size:13px;color:var(--green);border-bottom:1px solid var(--green-light);padding-bottom:1px;">
+              Airbnbですべてのレビューを見る（36件） <i class="ti ti-external-link" style="font-size:12px;vertical-align:-1px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="content-block">
+          <h3>ご利用にあたって</h3>
+          <div class="notes-list">
+            <div class="note-item"><i class="ti ti-clock"></i>チェックイン：15:00〜 ／ チェックアウト：〜10:00</div>
+            <div class="note-item"><i class="ti ti-smoking-no"></i>屋内禁煙（屋外喫煙可）</div>
+            <div class="note-item"><i class="ti ti-volume-off"></i>パーティ等の近隣迷惑行為は禁止</div>
+            <div class="note-item"><i class="ti ti-shoe-off"></i>室内は靴を脱いでご利用ください</div>
+            <div class="note-item"><i class="ti ti-license"></i>旅館業法許可番号：後保生第855号（鈴川）</div>
+          </div>
+        </div>
+
+      </div><!-- /main -->
+
+      <!-- SIDEBAR -->
+      <div class="sidebar-sticky">
+        <div class="sidebar-card" style="border:2px solid var(--green);">
+          <div class="sidebar-card-title">ご予約・お問い合わせ</div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+            料金は日程・人数により異なります。<br>まずはお気軽にお問い合わせください。
+          </p>
+          <a href="booking.html" class="btn btn-primary" style="width:100%;justify-content:center;">仮予約フォームへ</a>
+          <a href="contact.html" class="btn btn-outline" style="width:100%;justify-content:center;">お問い合わせ</a>
+          <p style="font-size:11px;color:var(--text-light);line-height:1.7;text-align:center;">
+            仮予約フォームに日程・人数をご入力ください。<br>空室確認後、メールにてご連絡します。
+          </p>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">施設スペック</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">宿泊人数</span>
+              <span style="font-weight:500;">最大8名</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">寝室</span>
+              <span style="font-weight:500;">3室 / ベッド7台</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">バスルーム</span>
+              <span style="font-weight:500;">1室</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">建物面積</span>
+              <span style="font-weight:500;">86㎡</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">ペット</span>
+              <span style="font-weight:500;">可（大型犬も可）</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:var(--text-muted);">チェックイン</span>
+              <span style="font-weight:500;">15:00〜</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title" style="font-size:13px;">料金の目安</div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+            ¥35,000〜 / 泊（税込）<br>
+            <span style="font-size:11px;">※繁忙期・連泊・人数により変動</span>
+          </p>
+          <a href="booking.html" style="font-size:12px;color:var(--green);display:flex;align-items:center;gap:4px;">
+            詳細な料金を確認する <i class="ti ti-arrow-right" style="font-size:12px;"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== ACCESS ========== -->
+  <section class="access-section">
+    <div class="container">
+      <span class="section-label">Access</span>
+      <h2 class="section-title">アクセス</h2>
+      <p style="font-size:13px;color:var(--text-muted);">北海道虻田郡喜茂別町</p>
+      <div class="access-inner">
+        <div class="map-embed">Google Maps 埋め込み（鈴川周辺）</div>
+        <div>
+          <div class="access-list">
+            <div class="access-item">
+              <span class="access-place">ルスツリゾート</span>
+              <span class="access-dist">車で約9〜10分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">洞爺湖</span>
+              <span class="access-dist">車で約30分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">ニセコ（アンヌプリ）</span>
+              <span class="access-dist">車で約30分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">尻別川</span>
+              <span class="access-dist">徒歩1分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">新千歳空港</span>
+              <span class="access-dist">車で約90分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">札幌市内</span>
+              <span class="access-dist">車で約90分</span>
+            </div>
+          </div>
+          <p class="access-warn">
+            <i class="ti ti-alert-triangle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+            送迎はございません。レンタカーのご利用を強くおすすめします。
+          </p>
+          <div style="margin-top:16px;">
+            <a href="access.html" class="btn btn-outline" style="font-size:12px;padding:8px 18px;">アクセス詳細ページを見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Reservation</span>
+      <h2 class="section-title" style="color:var(--white);">SISUMO 鈴川に泊まる</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">
+        仮予約フォームに日程・人数をご入力ください。<br>空室確認後、メールにてご連絡いたします。
+      </p>
+      <div class="btn-actions">
+        <a href="booking.html" class="btn btn-outline-white btn-lg">仮予約フォームへ</a>
+        <a href="kombu.html" class="btn btn-outline-white btn-lg">SISUMO 昆布も見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

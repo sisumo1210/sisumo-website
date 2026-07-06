@@ -1,0 +1,475 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISUMOについて | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── ページヒーロー（ライト版・内ページ共通） ─── */
+    .page-hero {
+      height: 220px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 40px;
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero-bg { display: none; }
+    .page-hero-overlay { display: none; }
+    .page-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    .page-hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+    .page-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .page-hero p {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+    .page-hero .breadcrumb {
+      position: absolute;
+      bottom: 16px;
+      left: 40px;
+    }
+
+    /* ─── ブランドストーリー ─── */
+    .brand-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    .brand-image-block {
+      aspect-ratio: 4/3;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .brand-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .brand-content h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 500;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .brand-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .keyword-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .keyword-tag {
+      font-size: 11px;
+      color: var(--green);
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      padding: 4px 12px;
+      border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ─── バリュー ─── */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .value-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .value-num {
+      font-family: var(--font-serif);
+      font-size: 13px;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      font-weight: 500;
+    }
+    .value-rule {
+      width: 28px;
+      height: 1px;
+      background: var(--green);
+      margin: -6px 0;
+    }
+    .value-title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .value-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    /* ─── エリア紹介 ─── */
+    .region-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    .region-content {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .region-content h3 {
+      font-family: var(--font-serif);
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .region-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .region-image-block {
+      aspect-ratio: 4/3;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── レビュー ─── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .reviews-note {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+    .reviews-note a {
+      color: var(--green);
+      border-bottom: 1px solid var(--green-light);
+      padding-bottom: 1px;
+      transition: border-color var(--transition);
+    }
+    .reviews-note a:hover { border-color: var(--green); }
+
+    @media (max-width: 768px) {
+      .brand-inner,
+      .region-inner { grid-template-columns: 1fr; gap: 32px; }
+      .values-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .page-hero .breadcrumb { left: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html" style="color:var(--text);font-weight:500;">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- ========== PAGE HERO ========== -->
+  <div class="page-hero">
+    <div class="page-hero-bg">PHOTO — 羊蹄山 / 宿外観</div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <p class="page-hero-eyebrow">About SISUMO</p>
+      <h1>SISUMOについて</h1>
+      <p>北海道の自然の中で、暮らすように過ごす宿</p>
+    </div>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">HOME</a>
+      <span class="breadcrumb-sep"> › </span>
+      <span>SISUMOについて</span>
+    </nav>
+  </div>
+
+  <!-- ========== BRAND STORY ========== -->
+  <section class="section section--white">
+    <div class="container">
+      <div class="brand-inner">
+        <div class="brand-image-block" style="padding:0;overflow:hidden;background:#F3F0EB;"><img src="img/logo.png" alt="SISUMO" style="width:100%;height:100%;object-fit:contain;object-position:center;padding:40px;box-sizing:border-box;"></div>
+        <div class="brand-content">
+          <span class="section-label">Brand Story</span>
+          <h2>また帰ってきたいと思える宿を、<br>北海道の自然の中に。</h2>
+          <p>
+            SISUMOは、北海道後志エリアを拠点とする一棟貸し宿ブランドです。
+          </p>
+          <p>
+            ホテルでは味わえないプライベートな空間で、家族や仲間と思い思いの時間を。
+            羊蹄山を眺める朝、川のせせらぎを聞きながらの夕暮れ—
+            都市では出会えない「北海道の暮らし」を、そのままお届けすることを大切にしています。
+          </p>
+          <p>
+            ニセコ・ルスツ・洞爺湖という北海道屈指の観光地に囲まれながら、
+            落ち着いた田舎の環境の中に立地。「また帰ってきたい」と思っていただける宿を目指しています。
+          </p>
+          <div class="keyword-tags">
+            <span class="keyword-tag"># 一棟貸し</span>
+            <span class="keyword-tag"># プライベート</span>
+            <span class="keyword-tag"># 北海道の自然</span>
+            <span class="keyword-tag"># 家族旅行</span>
+            <span class="keyword-tag"># グループ滞在</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== VALUES ========== -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">Our Values</span>
+        <h2 class="section-title">SISUMOが大切にしていること</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-num">01</div>
+          <div class="value-rule"></div>
+          <div class="value-title">プライベートな時間</div>
+          <p class="value-desc">
+            一棟まるごと貸切だから、他のゲストを気にせずに過ごせます。
+            家族だけ、仲間だけの特別な空間をご提供します。
+          </p>
+        </div>
+        <div class="value-card">
+          <div class="value-num">02</div>
+          <div class="value-rule"></div>
+          <div class="value-title">地域との深いつながり</div>
+          <p class="value-desc">
+            後志エリアを拠点に活動するホストだからこそ知っている、
+            地域の魅力・穴場スポット・季節の楽しみ方をお伝えします。
+          </p>
+        </div>
+        <div class="value-card">
+          <div class="value-num">03</div>
+          <div class="value-rule"></div>
+          <div class="value-title">安心・丁寧な運営</div>
+          <p class="value-desc">
+            スーパーホスト認定・旅館業法許可取得済み。
+            清掃・設備管理を徹底し、快適な滞在をサポートします。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GUEST REVIEWS ========== -->
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">Guest Reviews</span>
+        <h2 class="section-title">ゲストの声</h2>
+        <p class="section-desc">Airbnbに寄せられた実際のレビューより</p>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">「羊蹄山を眺めながらのんびり過ごせて最高でした。清潔感があり、設備も充実していて家族全員大満足。また絶対に来たいと思える宿です。」</p>
+          <p class="review-meta">家族旅行 — SISUMO鈴川</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">「友人グループ7名で利用しました。一棟貸しなので気兼ねなく過ごせて、ウッドデッキでのBBQが最高の思い出になりました。ホストの対応もとても丁寧でした。」</p>
+          <p class="review-meta">友人グループ — SISUMO鈴川</p>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">「ニセコスキーの拠点として利用。温泉まで徒歩3分はありがたかったです。広いリビングで仲間と食事できてリゾートホテルとは違う温かみがありました。」</p>
+          <p class="review-meta">スキー旅行 — SISUMO昆布</p>
+        </div>
+      </div>
+      <div class="reviews-note">
+        ※ 掲載レビューはAirbnbに投稿された実際の口コミより抜粋しています。<br>
+        <a href="https://www.airbnb.jp/" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;">すべてのレビューを見る（Airbnb） <i class="ti ti-external-link" style="font-size:12px;vertical-align:-1px;"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== REGION ========== -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Our Region</span>
+        <h2 class="section-title">北海道後志エリアについて</h2>
+      </div>
+      <div class="region-inner">
+        <div class="region-content">
+          <h3>ニセコ・ルスツ・洞爺湖を結ぶ、<br>滞在の拠点</h3>
+          <p>
+            SISUMOの施設は、北海道後志エリアの喜茂別町・蘭越町に位置しています。
+            世界的なスノーリゾート「ニセコ」や、北海道最大級のオールシーズンリゾート「ルスツ」、
+            温泉と湖畔が魅力の「洞爺湖」へのアクセス拠点として最適です。
+          </p>
+          <p>
+            新千歳空港・札幌市内から約90分と好アクセスでありながら、
+            羊蹄山・尻別川の自然に囲まれた落ち着いた田舎の環境が広がっています。
+            忙しい日常から離れ、北海道の四季をゆっくりと楽しんでください。
+          </p>
+          <a href="access.html" class="btn btn-outline" style="align-self:flex-start;">周辺観光・アクセスを見る</a>
+        </div>
+        <div class="region-image-block" style="padding:0;overflow:hidden;"><img src="img/common/about-region.jpg" alt="北海道後志エリア" style="width:100%;height:100%;object-fit:cover;object-position:center;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Our Properties</span>
+      <h2 class="section-title" style="color:var(--white);">施設をご覧ください</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">現在2施設を運営中。一棟まるごと、あなただけの北海道滞在を。</p>
+      <div class="btn-actions">
+        <a href="properties.html" class="btn btn-outline-white btn-lg">施設一覧を見る</a>
+        <a href="booking.html" class="btn btn-outline-white btn-lg">ご予約・お問い合わせ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+
+
+
+
+
+
+

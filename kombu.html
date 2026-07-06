@@ -1,0 +1,729 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISUMO 昆布 | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── ギャラリー ─── */
+    .gallery {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 260px 260px;
+      gap: 4px;
+    }
+    .gallery-main { grid-row: 1 / 3; }
+    .gallery-cell {
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      overflow: hidden;
+    }
+    .gallery-cell img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* ─── パンくず ─── */
+    .breadcrumb-bar {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── メイン＋サイドバー ─── */
+    .detail-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 60px;
+      align-items: start;
+      padding: var(--section-gap) 0;
+    }
+
+    /* ─── 物件ヘッダー ─── */
+    .prop-name {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .prop-location {
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .prop-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .badge-gold {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 12px;
+      background: #FDF6E3;
+      color: #7A5F00;
+      border: 1px solid #E8D070;
+      border-radius: 2px;
+    }
+    .prop-tagline {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    /* ─── スペック ─── */
+    .specs-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 28px 0;
+    }
+    .spec-cell {
+      text-align: center;
+      padding: 18px 10px;
+      border-right: 1px solid var(--border);
+    }
+    .spec-cell:last-child { border-right: none; }
+    .spec-cell .spec-val {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .spec-cell .spec-key {
+      font-size: 10px;
+      color: var(--text-light);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── コンテンツブロック ─── */
+    .content-block { margin-bottom: 40px; }
+    .content-block h3 {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-block p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    /* ─── 温泉ハイライト ─── */
+    .onsen-box {
+      background: #F0F6FB;
+      border: 1px solid #C5D8EC;
+      border-left: 4px solid #5A9BC0;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .onsen-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #D8EBF5;
+      color: #3A7EA0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .onsen-body h4 {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: #2A5A7A;
+      margin-bottom: 10px;
+    }
+    .onsen-body p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    /* ─── スキーアクセス ─── */
+    .ski-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .ski-table tr { border-bottom: 1px solid var(--border); }
+    .ski-table tr:last-child { border-bottom: none; }
+    .ski-table td { padding: 10px 12px; color: var(--text-muted); }
+    .ski-table td:first-child { color: var(--text); }
+    .ski-table td:last-child { text-align: right; color: var(--green); font-weight: 500; }
+    .ski-note {
+      font-size: 12px;
+      color: #B94040;
+      background: #FDF3F3;
+      border: 1px solid #F5C6C6;
+      border-left: 3px solid #E05050;
+      padding: 8px 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    /* ─── 寝室 ─── */
+    .rooms-list { display:flex; flex-direction:column; gap:10px; }
+    .room-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+    }
+    .room-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--green-light);
+      color: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .room-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+    .room-detail { font-size: 12px; color: var(--text-muted); }
+
+    /* ─── 設備 ─── */
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .amenity-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 8px 10px;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+    }
+    .amenity-item i { color: var(--green); font-size: 15px; flex-shrink: 0; }
+
+    /* ─── レビュー ─── */
+    .reviews-list { display:flex; flex-direction:column; gap:16px; }
+
+    /* ─── 注意事項 ─── */
+    .notes-list { display:flex; flex-direction:column; gap:8px; }
+    .note-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .note-item i { color: var(--text-light); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+
+    /* ─── サイドバー ─── */
+    .sidebar-sticky { position: sticky; top: 84px; }
+
+    /* ─── アクセスセクション ─── */
+    .access-section { padding: var(--section-gap) 0; background: var(--bg-alt); }
+    .access-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 32px;
+      align-items: start;
+    }
+    .map-embed {
+      aspect-ratio: 4/3;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 13px;
+      overflow: hidden;
+    }
+    .access-list { display:flex; flex-direction:column; gap:0; }
+    .access-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .access-item:last-child { border-bottom: none; }
+    .access-place { color: var(--text); }
+    .access-dist { color: var(--green); font-weight: 500; font-size: 13px; }
+    .access-dist.walk { color: #3A7EA0; }
+    .access-warn {
+      font-size: 12px;
+      color: #B94040;
+      background: #FDF3F3;
+      border: 1px solid #F5C6C6;
+      border-left: 3px solid #E05050;
+      padding: 10px 14px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .detail-wrapper { grid-template-columns: 1fr; }
+      .access-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .specs-strip { grid-template-columns: repeat(2, 1fr); }
+      .specs-strip .spec-cell:nth-child(2) { border-right: none; }
+      .specs-strip .spec-cell:nth-child(3) { border-top: 1px solid var(--border); }
+      .amenities-grid { grid-template-columns: 1fr; }
+      .onsen-box { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html" style="color:var(--text);font-weight:500;">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- ========== GALLERY ========== -->
+  <div class="gallery">
+    <div class="gallery-cell gallery-main">
+      <img src="img/kombu/kombu-3.jpg" alt="SISUMO昆布 メイン" style="width:100%;height:100%;object-fit:cover;object-position:center 93%;">
+    </div>
+    <div class="gallery-cell">
+      <img src="img/kombu/kombu-27.jpg" alt="SISUMO昆布" style="width:100%;height:100%;object-fit:cover;object-position:center 60%;">
+    </div>
+    <div class="gallery-cell">
+      <img src="img/kombu/kombu-14.jpg" alt="SISUMO昆布" style="width:100%;height:100%;object-fit:cover;object-position:center 60%;">
+    </div>
+  </div>
+
+  <!-- ========== BREADCRUMB ========== -->
+  <div class="breadcrumb-bar">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <a href="properties.html">施設一覧</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>SISUMO 昆布</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ========== MAIN + SIDEBAR ========== -->
+  <div class="container">
+    <div class="detail-wrapper">
+
+      <!-- MAIN -->
+      <div>
+
+        <!-- 物件ヘッダー -->
+        <div class="prop-name">SISUMO 昆布</div>
+        <p class="prop-location">北海道磯谷郡蘭越町 ／ 一棟貸し</p>
+        <div class="prop-badges">
+          <span class="badge-gold"><i class="ti ti-star" style="font-size:11px;vertical-align:-1px;"></i> 4.95（22件）</span>
+          <span class="badge-gold">ゲストチョイス</span>
+          <span class="badge-gold">スーパーホスト</span>
+          <span class="tag">温泉徒歩3分</span>
+          <span class="tag">スキー向け</span>
+          <span class="tag">長期滞在対応</span>
+          <span class="tag">旅館業法許可取得済み</span>
+        </div>
+        <p class="prop-tagline">
+          ニセコアンヌプリまで車で10分のスキー拠点。<br>
+          老舗温泉「幽泉閣」へ徒歩3分。キッチン・洗濯設備完備で長期滞在にも対応します。
+        </p>
+
+        <!-- スペック -->
+        <div class="specs-strip">
+          <div class="spec-cell">
+            <div class="spec-val">最大8名</div>
+            <div class="spec-key">宿泊人数</div>
+          </div>
+          <div class="spec-cell">
+            <div class="spec-val">3寝室</div>
+            <div class="spec-key">寝室数</div>
+          </div>
+          <div class="spec-cell">
+            <div class="spec-val">6ベッド</div>
+            <div class="spec-key">ベッド数</div>
+          </div>
+          <div class="spec-cell">
+            <div class="spec-val">温泉<br>徒歩3分</div>
+            <div class="spec-key">周辺環境</div>
+          </div>
+        </div>
+
+        <!-- 施設説明 -->
+        <div class="content-block">
+          <h3>施設について</h3>
+          <p>
+            SISUMO昆布は、北海道磯谷郡蘭越町に位置する一棟貸しの宿です。
+            ニセコアンヌプリスキー場まで車で10分、ルスツリゾートまで35分と、
+            スキー・スノーボード旅行の拠点として最適な立地です。
+            8名がけダイニングテーブル・ソファ・Yogibo・80インチテレビを完備した広いリビングで、
+            グループの時間をゆったり過ごせます。
+            キッチン・洗濯機完備で、ワーケーションや長期滞在にも対応しています。
+          </p>
+        </div>
+
+        <!-- 温泉ハイライト -->
+        <div class="onsen-box">
+          <div class="onsen-icon">♨</div>
+          <div class="onsen-body">
+            <h4>老舗温泉「幽泉閣」まで徒歩3分</h4>
+            <p>
+              1958年創業の老舗温泉施設「幽泉閣」へ徒歩わずか3分。
+              サウナ・レストランも併設し、日帰り入浴は10:00〜21:30まで利用可能。
+              スキー帰りに汗を流し、宿に戻ってゆっくりくつろぐ—
+              昆布ならではの滞在スタイルをお楽しみください。
+            </p>
+          </div>
+        </div>
+
+        <!-- スキーアクセス -->
+        <div class="content-block">
+          <h3>スキー・スノーボードの拠点に</h3>
+          <table class="ski-table">
+            <tr><td>ニセコアンヌプリスキー場</td><td>車で約10分</td></tr>
+            <tr><td>ニセコグラン・ヒラフ</td><td>車で約15分</td></tr>
+            <tr><td>ルスツリゾート</td><td>車で約35分</td></tr>
+          </table>
+          <p style="font-size:14px;color:var(--text-muted);line-height:2;margin-bottom:12px;">
+            世界的なパウダースノーで知られるニセコのスキー場へ好アクセス。
+            帰宅後は温泉で疲れを癒し、広いリビングで仲間と食事を楽しめます。
+          </p>
+          <p class="ski-note">
+            <i class="ti ti-alert-triangle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+            送迎はございません。レンタカーのご利用を強くおすすめします。
+          </p>
+        </div>
+
+        <!-- 寝室構成 -->
+        <div class="content-block">
+          <h3>寝室構成</h3>
+          <div class="rooms-list">
+            <div class="room-item">
+              <div class="room-icon"><i class="ti ti-bed"></i></div>
+              <div>
+                <div class="room-name">寝室A</div>
+                <div class="room-detail">ダブルベッド1台</div>
+              </div>
+            </div>
+            <div class="room-item">
+              <div class="room-icon"><i class="ti ti-bed"></i></div>
+              <div>
+                <div class="room-name">寝室B</div>
+                <div class="room-detail">ダブルベッド1台</div>
+              </div>
+            </div>
+            <div class="room-item">
+              <div class="room-icon"><i class="ti ti-bed"></i></div>
+              <div>
+                <div class="room-name">寝室C</div>
+                <div class="room-detail">シングルベッド4台</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 設備 -->
+        <div class="content-block">
+          <h3>設備・アメニティ</h3>
+          <div class="amenities-grid">
+            <div class="amenity-item"><i class="ti ti-tool-kitchen-2"></i>キッチン（フル装備）</div>
+            <div class="amenity-item"><i class="ti ti-fridge"></i>冷蔵庫・電子レンジ</div>
+            <div class="amenity-item"><i class="ti ti-washing-machine"></i>洗濯機</div>
+            <div class="amenity-item"><i class="ti ti-wifi"></i>Wi-Fi</div>
+            <div class="amenity-item"><i class="ti ti-device-tv"></i>80インチテレビ</div>
+            <div class="amenity-item"><i class="ti ti-armchair"></i>ソファ・Yogibo</div>
+            <div class="amenity-item"><i class="ti ti-users"></i>8名がけダイニングテーブル</div>
+            <div class="amenity-item"><i class="ti ti-key"></i>セルフチェックイン（キーボックス）</div>
+            <div class="amenity-item"><i class="ti ti-sparkles"></i>清掃業者による清掃・消毒</div>
+            <div class="amenity-item"><i class="ti ti-droplet"></i>温泉 徒歩3分（幽泉閣）</div>
+          </div>
+        </div>
+
+        <!-- ゲストの声 -->
+        <div class="content-block">
+          <h3>ゲストの声</h3>
+          <div class="reviews-list">
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">「ニセコスキーの拠点として利用。温泉まで徒歩3分は最高でした。広いリビングで仲間と食事できて、リゾートホテルとは違う温かみがありました。」</p>
+              <p class="review-meta">スキー旅行・友人グループ（2024年冬）</p>
+            </div>
+            <div class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">「家族8人で利用しました。キッチンが充実していて自炊もできて助かりました。清潔感があり、ホストの対応も丁寧でした。」</p>
+              <p class="review-meta">家族旅行（2024年夏）</p>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <a href="https://www.airbnb.jp/" target="_blank" rel="noopener" style="font-size:13px;color:var(--green);border-bottom:1px solid var(--green-light);padding-bottom:1px;">
+              Airbnbですべてのレビューを見る（22件） <i class="ti ti-external-link" style="font-size:12px;vertical-align:-1px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="content-block">
+          <h3>ご利用にあたって</h3>
+          <div class="notes-list">
+            <div class="note-item"><i class="ti ti-clock"></i>チェックイン：15:00〜 ／ チェックアウト：〜11:00</div>
+            <div class="note-item"><i class="ti ti-smoking-no"></i>屋内禁煙</div>
+            <div class="note-item"><i class="ti ti-shoe-off"></i>室内は靴を脱いでご利用ください</div>
+            <div class="note-item"><i class="ti ti-volume-off"></i>パーティ等の迷惑行為禁止。深夜・早朝は静かにお過ごしください</div>
+            <div class="note-item"><i class="ti ti-car"></i>レンタカーが必須です（送迎なし・住宅地立地）</div>
+            <div class="note-item"><i class="ti ti-license"></i>旅館業法許可番号：後保生第794号（昆布）</div>
+          </div>
+        </div>
+
+      </div><!-- /main -->
+
+      <!-- SIDEBAR -->
+      <div class="sidebar-sticky">
+        <div class="sidebar-card" style="border:2px solid var(--green);">
+          <div class="sidebar-card-title">ご予約・お問い合わせ</div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+            料金は日程・人数により異なります。<br>まずはお気軽にお問い合わせください。
+          </p>
+          <a href="booking.html" class="btn btn-primary" style="width:100%;justify-content:center;">仮予約フォームへ</a>
+          <a href="contact.html" class="btn btn-outline" style="width:100%;justify-content:center;">お問い合わせ</a>
+          <p style="font-size:11px;color:var(--text-light);line-height:1.7;text-align:center;">
+            仮予約フォームに日程・人数をご入力ください。<br>空室確認後、メールにてご連絡します。
+          </p>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">施設スペック</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">宿泊人数</span>
+              <span style="font-weight:500;">最大8名</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">寝室</span>
+              <span style="font-weight:500;">3室 / ベッド6台</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">バスルーム</span>
+              <span style="font-weight:500;">1室</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">温泉</span>
+              <span style="font-weight:500;color:#3A7EA0;">徒歩3分</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-muted);">チェックイン</span>
+              <span style="font-weight:500;">15:00〜</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:var(--text-muted);">チェックアウト</span>
+              <span style="font-weight:500;">〜11:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title" style="font-size:13px;">料金の目安</div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+            ¥35,000〜 / 泊（税込）<br>
+            <span style="font-size:11px;">※繁忙期・連泊・人数により変動</span>
+          </p>
+          <a href="booking.html" style="font-size:12px;color:var(--green);display:flex;align-items:center;gap:4px;">
+            詳細な料金を確認する <i class="ti ti-arrow-right" style="font-size:12px;"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== ACCESS ========== -->
+  <section class="access-section">
+    <div class="container">
+      <span class="section-label">Access</span>
+      <h2 class="section-title">アクセス</h2>
+      <p style="font-size:13px;color:var(--text-muted);">北海道磯谷郡蘭越町</p>
+      <div class="access-inner">
+        <div class="map-embed">Google Maps 埋め込み（昆布・蘭越町周辺）</div>
+        <div>
+          <div class="access-list">
+            <div class="access-item">
+              <span class="access-place">幽泉閣（温泉）</span>
+              <span class="access-dist walk">徒歩3分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">ニセコアンヌプリスキー場</span>
+              <span class="access-dist">車で約10分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">ニセコグラン・ヒラフ</span>
+              <span class="access-dist">車で約15分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">ルスツリゾート</span>
+              <span class="access-dist">車で約35分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">洞爺湖</span>
+              <span class="access-dist">車で約45分</span>
+            </div>
+            <div class="access-item">
+              <span class="access-place">新千歳空港</span>
+              <span class="access-dist">車で約90分</span>
+            </div>
+          </div>
+          <p class="access-warn">
+            <i class="ti ti-alert-triangle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+            送迎はございません。レンタカーのご利用を強くおすすめします。
+          </p>
+          <div style="margin-top:16px;">
+            <a href="access.html" class="btn btn-outline" style="font-size:12px;padding:8px 18px;">アクセス詳細ページを見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Reservation</span>
+      <h2 class="section-title" style="color:var(--white);">SISUMO 昆布に泊まる</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">
+        仮予約フォームに日程・人数をご入力ください。<br>空室確認後、メールにてご連絡いたします。
+      </p>
+      <div class="btn-actions">
+        <a href="booking.html" class="btn btn-outline-white btn-lg">仮予約フォームへ</a>
+        <a href="suzukawa.html" class="btn btn-outline-white btn-lg">SISUMO 鈴川も見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,668 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>よくある質問 | SISUMO</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    /* ─── カテゴリナビ ─── */
+    .cat-nav-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 68px;
+      z-index: 90;
+    }
+    .cat-nav {
+      display: flex;
+      gap: 6px;
+      padding: 12px 0;
+      flex-wrap: wrap;
+    }
+    .cat-btn {
+      font-size: 12px;
+      font-family: var(--font-sans);
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--white);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .cat-btn:hover { border-color: var(--green); color: var(--green); }
+    .cat-btn.active {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+    }
+
+    /* ─── FAQセクション ─── */
+    .faq-body {
+      padding: var(--section-gap) 0;
+    }
+    .faq-category {
+      margin-bottom: 52px;
+    }
+    .faq-category:last-child { margin-bottom: 0; }
+    .faq-cat-title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      padding-left: 14px;
+      border-left: 3px solid var(--green);
+      margin-bottom: 20px;
+    }
+    .faq-list { display: flex; flex-direction: column; gap: 2px; }
+
+    /* ─── アコーディオン ─── */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .faq-q {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--bg);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+      list-style: none;
+    }
+    .faq-q:hover { background: var(--bg-alt); }
+    .faq-q-mark {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--green);
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+    .faq-q-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .faq-toggle {
+      font-size: 18px;
+      color: var(--text-light);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      line-height: 1.6;
+    }
+    .faq-item.open .faq-toggle { transform: rotate(45deg); color: var(--green); }
+    .faq-a {
+      display: none;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+    .faq-item.open .faq-a { display: flex; }
+    .faq-a-mark {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-light);
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+    .faq-a-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 2;
+      flex: 1;
+    }
+
+    /* ─── キャンセルテーブル ─── */
+    .cancel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+    .cancel-table th {
+      background: var(--bg-alt);
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 500;
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 11px;
+    }
+    .cancel-table td {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .cancel-table td:last-child { text-align: right; font-weight: 500; color: var(--text); }
+    .cancel-table tr:last-child td { color: #B94040; }
+
+    /* ─── ペット注意事項リスト ─── */
+    .pet-rules {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .pet-rules li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .pet-rules li::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--text-light);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    /* ─── ペット料金ハイライト ─── */
+    .pet-fee {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--green-xlight);
+      border: 1px solid var(--green-light);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      margin: 10px 0;
+    }
+
+    @media (max-width: 768px) {
+      .cat-nav { gap: 4px; }
+      .cat-btn { font-size: 11px; padding: 5px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo-img">
+        <img src="img/logo.png" alt="SISUMO" height="36">
+      </a>
+      <nav class="site-nav">
+        <a href="about.html">SISUMOについて</a>
+        <a href="properties.html">宿一覧</a>
+        <a href="sightseeing.html">周辺観光</a>
+        <a href="access.html">アクセス</a>
+        <a href="faq.html" style="color:var(--text);font-weight:500;">よくある質問</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" class="icon-link" aria-label="Instagram">
+          <i class="ti ti-brand-instagram"></i>
+        </a>
+        <a href="booking.html" class="btn btn-primary">ご予約</a>
+      <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      </div>
+    </div>
+  </header>
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="about.html">SISUMOについて</a>
+    <a href="properties.html">宿一覧</a>
+    <a href="sightseeing.html">周辺観光</a>
+    <a href="access.html">アクセス</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="booking.html" class="mobile-nav-cta">ご予約</a>
+  </nav>
+  <script>
+    (function(){
+      var btn = document.getElementById('hamburger');
+      var nav = document.getElementById('mobile-nav');
+      if (!btn || !nav) return;
+      btn.addEventListener('click', function(){
+        var open = nav.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+      });
+    })();
+  </script>
+
+  <!-- ========== PAGE HERO ========== -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">FAQ</span>
+      <h1 class="page-hero-title">よくある質問</h1>
+      <p class="page-hero-sub">お問い合わせの前にご確認ください。</p>
+      <nav class="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="breadcrumb-sep"> › </span>
+        <span>よくある質問</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ========== CATEGORY NAV ========== -->
+  <div class="cat-nav-bar">
+    <div class="container">
+      <div class="cat-nav">
+        <button class="cat-btn active" data-cat="all">すべて</button>
+        <button class="cat-btn" data-cat="booking">ご予約・キャンセル</button>
+        <button class="cat-btn" data-cat="checkin">チェックイン・アウト</button>
+        <button class="cat-btn" data-cat="facility">施設・設備</button>
+        <button class="cat-btn" data-cat="pet">ペット</button>
+        <button class="cat-btn" data-cat="payment">お支払い</button>
+        <button class="cat-btn" data-cat="other">その他</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FAQ BODY ========== -->
+  <section class="faq-body">
+    <div class="container" style="max-width:760px;">
+
+      <!-- ご予約・キャンセル -->
+      <div class="faq-category" data-category="booking">
+        <h2 class="faq-cat-title">ご予約・キャンセル</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">どうやって予約できますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">
+                このサイトの仮予約フォームに日程・人数・連絡先をご入力ください。空室を確認の上、メールにてご連絡いたします。その後、クレジットカード決済リンクをお送りし、決済完了をもって予約確定となります。
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">キャンセルポリシーを教えてください。</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">
+                以下のキャンセル料が発生します。
+                <table class="cancel-table">
+                  <thead>
+                    <tr>
+                      <th>キャンセル日</th>
+                      <th style="text-align:right;">キャンセル料</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>31日前まで</td><td>無料</td></tr>
+                    <tr><td>30〜15日前</td><td>宿泊料金の30%</td></tr>
+                    <tr><td>14〜8日前</td><td>宿泊料金の50%</td></tr>
+                    <tr><td>7〜2日前</td><td>宿泊料金の80%</td></tr>
+                    <tr><td>前日・当日・無連絡</td><td>宿泊料金の100%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">空き状況はどこで確認できますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">ご予約フォームのカレンダーにてご確認いただけます。ご不明な場合はお問い合わせください。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">長期滞在はできますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">はい、対応しています。1週間以上の長期滞在もお気軽にご相談ください。キッチン・洗濯設備が完備されているため、ワーケーションや移住体験にも適しています。</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- チェックイン・チェックアウト -->
+      <div class="faq-category" data-category="checkin">
+        <h2 class="faq-cat-title">チェックイン・チェックアウト</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">チェックインの方法を教えてください。</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">セルフチェックインに対応しています。ご予約確定後、チェックイン方法（キーボックスの番号等）をメールにてご案内いたします。スタッフは現地に常駐しておりません。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">チェックイン・チェックアウトの時間は？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">チェックイン：15:00〜 ／ チェックアウト：〜10:00です（SISUMO昆布は〜11:00）。時間外のご対応はご相談ください。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">早めに到着した場合、荷物を預けられますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">チェックイン前の荷物預かりについてはご相談ください。状況によって対応いたします。</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 施設・設備 -->
+      <div class="faq-category" data-category="facility">
+        <h2 class="faq-cat-title">施設・設備</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">BBQはできますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">SISUMO鈴川ではBBQプランをご用意しています（食材・機材一式込み）。ご予約時にオプションとしてお申し込みください。SISUMO昆布ではBBQの設備はございません。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">Wi-Fiはありますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">はい、両施設とも高速Wi-Fiを完備しています。リモートワークやワーケーションにもご利用いただけます。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">駐車場はありますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">はい、両施設とも無料の駐車場があります。台数はお問い合わせください。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">喫煙はできますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">室内は全面禁煙です。屋外での喫煙はご相談ください。</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ペット -->
+      <div class="faq-category" data-category="pet">
+        <h2 class="faq-cat-title">ペット</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">ペットを連れて行けますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">SISUMO鈴川はペット同伴可能です（大型犬も可）。SISUMO昆布についてはお問い合わせください。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">ペット同伴の追加料金はありますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">
+                はい、別途ペット受入料金がかかります。<br>
+                <span class="pet-fee">ペット受入料金（特別清掃費）：4,000円（税込）／ 頭・泊</span><br>
+                最大2頭まで同伴可能です。ご予約時にお申し込みください。
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">ペット同伴時の注意事項を教えてください。</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">
+                以下の点をご確認の上、ご利用ください。
+                <ul class="pet-rules">
+                  <li>室内ではマナーパンツ（またはマナーベルト）の着用をお願いしています。</li>
+                  <li>ベッド・布団の上には乗せないでください。</li>
+                  <li>長時間のお留守番はご遠慮ください。</li>
+                  <li>排泄物は飼い主様が処理してください。</li>
+                  <li>破損・汚損があった場合は実費をご負担いただきます。</li>
+                  <li>ワクチン・狂犬病予防接種済みであること。</li>
+                  <li>攻撃性のある犬は宿泊できません。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- お支払い -->
+      <div class="faq-category" data-category="payment">
+        <h2 class="faq-cat-title">お支払い</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">支払い方法を教えてください。</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">クレジットカード（Visa・Mastercard・JCB・American Express等）でのお支払いが可能です。ご予約確定後、決済リンクをメールにてお送りします。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">現地での現金払いはできますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">現地での現金払いには対応していません。事前のクレジットカード決済のみとなります。</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- その他 -->
+      <div class="faq-category" data-category="other">
+        <h2 class="faq-cat-title">その他</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">近くにコンビニやスーパーはありますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">車で数分以内にコンビニがあります。大型スーパーへは車で15〜20分程度です。食材の買い出しは事前にお済ませいただくことをおすすめします。</div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">
+              <span class="faq-q-mark">Q</span>
+              <span class="faq-q-text">領収書の発行はできますか？</span>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-a">
+              <span class="faq-a-mark">A</span>
+              <div class="faq-a-text">はい、対応しています。ご希望の方はお問い合わせください。</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="cta-banner">
+    <div class="container">
+      <span class="section-label" style="color:rgba(255,255,255,0.55);">Contact</span>
+      <h2 class="section-title" style="color:var(--white);">解決しない場合はお気軽に</h2>
+      <p style="color:rgba(255,255,255,0.75);margin-bottom:36px;">
+        上記で解決しない場合は、お問い合わせフォームよりご連絡ください。<br>
+        通常1〜2営業日以内にご返信いたします。
+      </p>
+      <div class="btn-actions">
+        <a href="contact.html" class="btn btn-outline-white btn-lg">お問い合わせフォームへ</a>
+        <a href="booking.html" class="btn btn-outline-white btn-lg">仮予約フォームへ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="SISUMO" height="32" style="filter:brightness(0) invert(1);margin-bottom:12px;">
+          <p>北海道・後志エリアの一棟貸し宿ブランド。<br>喜茂別・蘭越に2施設を運営中。</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sisum.o" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="ti ti-brand-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>施設</h4>
+          <ul>
+            <li><a href="suzukawa.html">SISUMO 鈴川</a></li>
+            <li><a href="kombu.html">SISUMO 昆布</a></li>
+            <li><a href="fushimi.html">SISUMO 伏見（予定）</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>情報</h4>
+          <ul>
+            <li><a href="about.html">SISUMOについて</a></li>
+            <li><a href="sightseeing.html">周辺観光</a></li>
+            <li><a href="access.html">アクセス</a></li>
+            <li><a href="faq.html">よくある質問</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>予約・お問い合わせ</h4>
+          <ul>
+            <li><a href="booking.html">ご予約</a></li>
+            <li><a href="contact.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 SISUMO. All rights reserved.</span>
+        <span>旅館業法許可番号：後保生第855号（鈴川）・第794号（昆布）</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // アコーディオン
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.closest('.faq-item');
+        item.classList.toggle('open');
+      });
+    });
+
+    // カテゴリフィルター
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.cat;
+        document.querySelectorAll('.faq-category').forEach(section => {
+          if (cat === 'all' || section.dataset.category === cat) {
+            section.style.display = '';
+          } else {
+            section.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
