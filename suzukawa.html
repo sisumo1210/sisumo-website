@@ -321,6 +321,11 @@
       .gallery { grid-template-rows: 220px 220px; }
     }
     @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: 1fr;
+        grid-template-rows: 240px 180px 180px;
+      }
+      .gallery-main { grid-row: 1; }
       .specs-strip { grid-template-columns: repeat(2, 1fr); }
       .specs-strip .spec-cell:nth-child(2) { border-right: none; }
       .specs-strip .spec-cell:nth-child(3) { border-top: 1px solid var(--border); }
@@ -661,7 +666,9 @@
       <h2 class="section-title">アクセス</h2>
       <p style="font-size:13px;color:var(--text-muted);">北海道虻田郡喜茂別町</p>
       <div class="access-inner">
-        <div class="map-embed">Google Maps 埋め込み（鈴川周辺）</div>
+        <div class="map-embed" style="padding:0;overflow:hidden;">
+          <iframe src="https://maps.google.com/maps?q=42.7846,140.9397&z=13&output=embed" width="100%" height="100%" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
         <div>
           <div class="access-list">
             <div class="access-item">
