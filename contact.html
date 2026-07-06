@@ -220,10 +220,13 @@
     <div class="contact-wrapper">
 
       <!-- メインフォーム -->
-      <form>
+      <form name="contact" method="POST" data-netlify="true" action="/contact-thanks.html">
+        <input type="hidden" name="form-name" value="contact">
+
         <!-- お問い合わせ種別 -->
         <div class="form-row">
           <div class="form-label" style="font-size:13px;margin-bottom:10px;">お問い合わせ種別 <span class="req-badge">必須</span></div>
+          <input type="hidden" name="inquiry-type" id="inquiry-type-value" value="ご予約について">
           <div class="inquiry-types">
             <div class="inquiry-type selected">ご予約について</div>
             <div class="inquiry-type">施設・設備について</div>
@@ -237,7 +240,7 @@
         <!-- 対象施設 -->
         <div class="form-row" style="margin-top:24px;">
           <label class="form-label">対象施設 <span class="opt-badge">任意</span></label>
-          <select class="form-select">
+          <select name="facility" class="form-select">
             <option value="">施設を選択（任意）</option>
             <option>SISUMO 鈴川</option>
             <option>SISUMO 昆布</option>
@@ -249,18 +252,18 @@
         <!-- お名前 -->
         <div class="form-row">
           <label class="form-label">お名前 <span class="req-badge">必須</span></label>
-          <input type="text" class="form-input" placeholder="例：山田 太郎">
+          <input type="text" name="name" class="form-input" placeholder="例：山田 太郎" required>
         </div>
 
         <!-- メール・電話 -->
         <div class="form-row form-row-half">
           <div>
             <label class="form-label">メールアドレス <span class="req-badge">必須</span></label>
-            <input type="email" class="form-input" placeholder="例：example@email.com">
+            <input type="email" name="email" class="form-input" placeholder="例：example@email.com" required>
           </div>
           <div>
             <label class="form-label">電話番号 <span class="opt-badge">任意</span></label>
-            <input type="tel" class="form-input" placeholder="例：090-0000-0000">
+            <input type="tel" name="phone" class="form-input" placeholder="例：090-0000-0000">
           </div>
         </div>
 
@@ -268,18 +271,18 @@
         <div class="form-row form-row-half">
           <div>
             <label class="form-label">ご希望のチェックイン日 <span class="opt-badge">任意</span></label>
-            <input type="date" class="form-input">
+            <input type="date" name="checkin" class="form-input">
           </div>
           <div>
             <label class="form-label">ご希望のチェックアウト日 <span class="opt-badge">任意</span></label>
-            <input type="date" class="form-input">
+            <input type="date" name="checkout" class="form-input">
           </div>
         </div>
 
         <!-- 人数 -->
         <div class="form-row">
           <label class="form-label">宿泊人数 <span class="opt-badge">任意</span></label>
-          <select class="form-select">
+          <select name="guests" class="form-select">
             <option value="">人数を選択（任意）</option>
             <option>1名</option><option>2名</option><option>3名</option>
             <option>4名</option><option>5名</option><option>6名</option>
@@ -290,7 +293,7 @@
         <!-- お問い合わせ内容 -->
         <div class="form-row">
           <label class="form-label">お問い合わせ内容 <span class="req-badge">必須</span></label>
-          <textarea class="form-textarea" placeholder="ご質問・ご相談内容をご記入ください。"></textarea>
+          <textarea name="message" class="form-textarea" placeholder="ご質問・ご相談内容をご記入ください。" required></textarea>
         </div>
 
         <!-- 同意 -->
@@ -395,6 +398,7 @@
       type.addEventListener('click', () => {
         document.querySelectorAll('.inquiry-type').forEach(t => t.classList.remove('selected'));
         type.classList.add('selected');
+        document.getElementById('inquiry-type-value').value = type.textContent;
       });
     });
   </script>
