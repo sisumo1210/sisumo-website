@@ -282,9 +282,45 @@
       <span class="section-label">Area Map</span>
       <h2 class="section-title">後志エリアマップ</h2>
       <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;">SISUMO（喜茂別・蘭越）を拠点に、ニセコ・ルスツ・洞爺湖など主要観光地へアクセス可能です。</p>
-      <div style="width:100%;height:420px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);">
-        <iframe src="https://maps.google.com/maps?q=42.78,140.75&z=10&output=embed" width="100%" height="100%" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <div id="area-map" style="width:100%;height:420px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);"></div>
+      <script>
+        (function(){
+          var map = L.map('area-map').setView([42.73, 140.65], 10);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+
+          var sisumoIcon = L.divIcon({
+            className: '',
+            html: '<div style="background:#007E66;color:#fff;font-size:11px;font-weight:bold;padding:4px 8px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);">SISUMO</div>',
+            iconAnchor: [30, 12]
+          });
+          var spotIcon = L.divIcon({
+            className: '',
+            html: '<div style="background:#333;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.25);">●</div>',
+            iconAnchor: [8, 8]
+          });
+
+          var spots = [
+            { lat: 42.784, lng: 140.940, label: 'SISUMO 鈴川', icon: sisumoIcon, desc: '喜茂別町' },
+            { lat: 42.741, lng: 140.361, label: 'SISUMO 昆布', icon: sisumoIcon, desc: '蘭越町' },
+            { lat: 42.744, lng: 140.887, label: 'ルスツリゾート', icon: spotIcon, desc: '車で約10分（鈴川から）' },
+            { lat: 42.833, lng: 140.686, label: 'ニセコ グラン・ヒラフ', icon: spotIcon, desc: '車で約30分' },
+            { lat: 42.828, lng: 140.817, label: '羊蹄山', icon: spotIcon, desc: '後志の象徴' },
+            { lat: 42.571, lng: 140.786, label: '洞爺湖', icon: spotIcon, desc: '車で約30分（鈴川から）' },
+            { lat: 42.857, lng: 140.753, label: '尻別川', icon: spotIcon, desc: 'カヌー・ラフティング' },
+            { lat: 42.740, lng: 140.362, label: '幽泉閣（温泉）', icon: spotIcon, desc: '昆布から徒歩3分' },
+          ];
+
+          spots.forEach(function(s) {
+            L.marker([s.lat, s.lng], { icon: s.icon })
+              .addTo(map)
+              .bindPopup('<strong>' + s.label + '</strong><br><span style="font-size:11px;">' + s.desc + '</span>');
+          });
+        })();
+      </script>
     </div>
   </section>
 
