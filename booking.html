@@ -852,27 +852,20 @@
         <div class="price-preview-card">
           <div class="price-preview-title">料金内訳（参考）</div>
           <p class="price-preview-note">日程・施設・人数を選ぶと自動で計算されます</p>
-          <div class="price-summary">
-            <div class="price-summary-row"><span>施設</span><span>SISUMO 鈴川</span></div>
-            <div class="price-summary-row"><span>チェックイン</span><span>7月13日（土）</span></div>
-            <div class="price-summary-row"><span>チェックアウト</span><span>7月16日（火）</span></div>
-            <div class="price-summary-row"><span>宿泊数</span><span>3泊</span></div>
-            <div class="price-summary-row"><span>人数</span><span>6名</span></div>
-            <div class="price-summary-row"><span>ペット</span><span>1頭</span></div>
+          <div class="price-summary" id="price-summary">
+            <div class="price-summary-row"><span>施設</span><span id="ps-facility">—</span></div>
+            <div class="price-summary-row"><span>チェックイン</span><span id="ps-checkin">—</span></div>
+            <div class="price-summary-row"><span>チェックアウト</span><span id="ps-checkout">—</span></div>
+            <div class="price-summary-row"><span>宿泊数</span><span id="ps-nights">—</span></div>
+            <div class="price-summary-row"><span>人数</span><span id="ps-guests">—</span></div>
+            <div class="price-summary-row" id="ps-pet-row" style="display:none;"><span>ペット</span><span id="ps-pet">—</span></div>
           </div>
-          <div class="price-breakdown">
-            <div class="price-row"><span>7月13日（土）グリーン繁忙</span><span>¥60,000</span></div>
-            <div class="price-row"><span>7月14日（日）グリーン繁忙</span><span>¥40,000</span></div>
-            <div class="price-row"><span>7月15日（月）グリーン繁忙</span><span>¥40,000</span></div>
-            <div class="price-row divider"><span>宿泊料金 小計</span><span>¥140,000</span></div>
-            <div class="price-row"><span>ペット受入料金（1頭×3泊）</span><span>¥12,000</span></div>
-            <div class="price-row discount"><span>連泊割引（3泊・5%）</span><span>▲¥7,000</span></div>
-          </div>
+          <div class="price-breakdown" id="price-breakdown"></div>
           <div class="price-total">
             <span class="price-total-label">お支払い合計（税込）</span>
-            <span class="price-total-amount">¥145,000</span>
+            <span class="price-total-amount" id="price-total-amount">—</span>
           </div>
-          <p class="price-per-person">1名あたり 約¥24,167</p>
+          <p class="price-per-person" id="price-per-person"></p>
           <p class="price-disclaimer">※ この金額は参考金額です。確定金額は空室確認後のメールにてご案内します。<br>※ BBQプランは別途オプションです。</p>
         </div>
 
@@ -978,8 +971,148 @@
         document.querySelectorAll('.prop-option').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
         document.getElementById('facility-val').value = opt.dataset.facility || '';
+        calcAndUpdate();
       });
     });
+
+    // 人数・ペット変更時に再計算
+    document.querySelector('select[name="guests"]').addEventListener('change', calcAndUpdate);
+    document.querySelectorAll('.pet-check input[type="checkbox"]').forEach(function(cb){
+      cb.addEventListener('change', calcAndUpdate);
+    });
+
+    // 初期表示
+    calcAndUpdate();
+
+    // ── 料金計算 ──
+    var RATES = {
+      'SISUMO 鈴川': [
+        { months:[4],        weekday:28000, fri:34000, sat:40000, label:'春ショルダー' },
+        { months:[5,6,9,10], weekday:32000, fri:38000, sat:45000, label:'グリーン通常' },
+        { months:[7,8],      weekday:40000, fri:50000, sat:60000, label:'グリーン繁忙' },
+        { months:[11],       weekday:26000, fri:32000, sat:38000, label:'秋ショルダー' },
+        { months:[12,3],     weekday:55000, fri:65000, sat:75000, label:'ウィンター通常' },
+        { months:[1,2],      weekday:65000, fri:78000, sat:88000, label:'ウィンター繁忙' },
+      ],
+      'SISUMO 昆布': [
+        { months:[4],        weekday:28000, fri:34000, sat:40000, label:'春ショルダー' },
+        { months:[5,6,9,10], weekday:32000, fri:38000, sat:45000, label:'グリーン通常' },
+        { months:[7,8],      weekday:40000, fri:50000, sat:60000, label:'グリーン繁忙' },
+        { months:[12,3],     weekday:55000, fri:65000, sat:75000, label:'ウィンター通常' },
+        { months:[1,2],      weekday:65000, fri:78000, sat:88000, label:'ウィンター繁忙' },
+      ]
+    };
+
+    function getNightRate(facility, date) {
+      var m = date.getMonth() + 1;
+      var dow = date.getDay(); // 0=日,1=月,...,5=金,6=土
+      var rates = RATES[facility] || RATES['SISUMO 鈴川'];
+      for (var i = 0; i < rates.length; i++) {
+        if (rates[i].months.indexOf(m) !== -1) {
+          var r = rates[i];
+          var price = dow === 5 ? r.fri : dow === 6 ? r.sat : r.weekday;
+          var dowLabel = ['日','月','火','水','木','金','土'][dow];
+          return { price: price, label: r.label, dowLabel: dowLabel };
+        }
+      }
+      return { price: 40000, label: '通常', dowLabel: '' };
+    }
+
+    function fmtJP(d) {
+      var dow = ['日','月','火','水','木','金','土'][d.getDay()];
+      return (d.getMonth()+1) + '月' + d.getDate() + '日（' + dow + '）';
+    }
+
+    function calcAndUpdate() {
+      var facility = document.getElementById('facility-val').value || 'SISUMO 鈴川';
+      var checkinVal  = document.getElementById('cal-checkin-val').value;
+      var checkoutVal = document.getElementById('cal-checkout-val').value;
+      var guestsEl = document.querySelector('select[name="guests"]');
+      var guests = guestsEl ? parseInt(guestsEl.value) || 0 : 0;
+      var petChecks = document.querySelectorAll('.pet-check input[type="checkbox"]:checked');
+      var petCount = petChecks.length;
+
+      document.getElementById('ps-facility').textContent = facility || '—';
+      document.getElementById('ps-guests').textContent = guests ? guests + '名' : '—';
+
+      if (!checkinVal || !checkoutVal) {
+        document.getElementById('ps-checkin').textContent = '—';
+        document.getElementById('ps-checkout').textContent = '—';
+        document.getElementById('ps-nights').textContent = '—';
+        document.getElementById('price-breakdown').innerHTML = '';
+        document.getElementById('price-total-amount').textContent = '—';
+        document.getElementById('price-per-person').textContent = '';
+        return;
+      }
+
+      var cin  = new Date(checkinVal  + 'T00:00:00');
+      var cout = new Date(checkoutVal + 'T00:00:00');
+      var nights = Math.round((cout - cin) / (1000*60*60*24));
+
+      document.getElementById('ps-checkin').textContent  = fmtJP(cin);
+      document.getElementById('ps-checkout').textContent = fmtJP(cout);
+      document.getElementById('ps-nights').textContent   = nights + '泊';
+
+      // ペット
+      if (petCount > 0) {
+        document.getElementById('ps-pet-row').style.display = '';
+        document.getElementById('ps-pet').textContent = petCount + '頭';
+      } else {
+        document.getElementById('ps-pet-row').style.display = 'none';
+      }
+
+      // 一泊ごとの料金
+      var breakdown = '';
+      var subtotal = 0;
+      for (var i = 0; i < nights; i++) {
+        var d = new Date(cin.getTime() + i * 86400000);
+        var r = getNightRate(facility, d);
+        subtotal += r.price;
+        breakdown += '<div class="price-row"><span>' + fmtJP(d) + ' ' + r.label + '</span><span>¥' + r.price.toLocaleString() + '</span></div>';
+      }
+      breakdown += '<div class="price-row divider"><span>宿泊料金 小計</span><span>¥' + subtotal.toLocaleString() + '</span></div>';
+
+      // ペット料金
+      var petFee = petCount * nights * 4000;
+      if (petFee > 0) {
+        breakdown += '<div class="price-row"><span>ペット受入料金（' + petCount + '頭×' + nights + '泊）</span><span>¥' + petFee.toLocaleString() + '</span></div>';
+      }
+
+      // 連泊割引
+      var discountRate = 0, discountLabel = '';
+      if (nights >= 5) { discountRate = 0.10; discountLabel = '連泊割引（5泊以上・10%）'; }
+      else if (nights >= 3) { discountRate = 0.05; discountLabel = '連泊割引（3〜4泊・5%）'; }
+
+      // 早割
+      var today = new Date(); today.setHours(0,0,0,0);
+      var daysAhead = Math.round((cin - today) / 86400000);
+      var earlyRate = 0, earlyLabel = '';
+      if (daysAhead >= 60) { earlyRate = 0.07; earlyLabel = '早割（60日以上前・7%）'; }
+      else if (daysAhead >= 30) { earlyRate = 0.05; earlyLabel = '早割（30〜59日前・5%）'; }
+
+      // 直前割
+      var lateRate = 0, lateLabel = '';
+      if (daysAhead <= 3) { lateRate = 0.20; lateLabel = '直前割（3日前以内・20%）'; }
+      else if (daysAhead <= 7) { lateRate = 0.15; lateLabel = '直前割（7日前以内・15%）'; }
+
+      var totalDiscountRate = Math.max(discountRate, earlyRate, lateRate);
+      var appliedLabel = discountRate >= earlyRate && discountRate >= lateRate ? discountLabel : (earlyRate >= lateRate ? earlyLabel : lateLabel);
+      var discountAmt = Math.round(subtotal * totalDiscountRate);
+
+      if (discountAmt > 0) {
+        breakdown += '<div class="price-row discount"><span>' + appliedLabel + '</span><span>▲¥' + discountAmt.toLocaleString() + '</span></div>';
+      }
+
+      var total = subtotal + petFee - discountAmt;
+      document.getElementById('price-breakdown').innerHTML = breakdown;
+      document.getElementById('price-total-amount').textContent = '¥' + total.toLocaleString();
+
+      if (guests > 0) {
+        document.getElementById('price-per-person').textContent = '1名あたり 約¥' + Math.round(total / guests).toLocaleString();
+      } else {
+        document.getElementById('price-per-person').textContent = '';
+      }
+    }
 
     // ── カレンダー ──
     (function() {
@@ -1044,6 +1177,7 @@
           disp.textContent = '';
           cin.value = cout.value = '';
         }
+        calcAndUpdate();
       }
 
       document.getElementById('cal-prev').addEventListener('click', function(){
