@@ -287,37 +287,39 @@
       <div id="area-map" style="width:100%;height:420px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);"></div>
       <script>
         (function(){
-          var map = L.map('area-map').setView([42.73, 140.65], 10);
+          var map = L.map('area-map').setView([42.73, 140.70], 9);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
           }).addTo(map);
 
-          var sisumoIcon = L.divIcon({
-            className: '',
-            html: '<div style="background:#007E66;color:#fff;font-size:11px;font-weight:bold;padding:4px 8px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);">SISUMO</div>',
-            iconAnchor: [30, 12]
-          });
-          var spotIcon = L.divIcon({
-            className: '',
-            html: '<div style="background:#333;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.25);">●</div>',
-            iconAnchor: [8, 8]
-          });
+          function makeIcon(color, label) {
+            return L.divIcon({
+              className: '',
+              html: '<div style="background:'+color+';color:#fff;font-size:10px;font-weight:bold;padding:3px 8px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.35);">'+label+'</div>',
+              iconAnchor: [0, 10]
+            });
+          }
 
           var spots = [
-            { lat: 42.784, lng: 140.940, label: 'SISUMO 鈴川', icon: sisumoIcon, desc: '喜茂別町鈴川4' },
-            { lat: 42.736, lng: 140.373, label: 'SISUMO 昆布', icon: sisumoIcon, desc: '蘭越町昆布72-10' },
-            { lat: 42.747, lng: 140.869, label: 'ルスツリゾート', icon: spotIcon, desc: '車で約10分（鈴川から）' },
-            { lat: 42.833, lng: 140.686, label: 'ニセコ グラン・ヒラフ', icon: spotIcon, desc: '車で約30分' },
-            { lat: 42.828, lng: 140.817, label: '羊蹄山', icon: spotIcon, desc: '後志の象徴' },
-            { lat: 42.601, lng: 140.694, label: '洞爺湖', icon: spotIcon, desc: '車で約30分（鈴川から）' },
-            { lat: 42.800, lng: 140.920, label: '尻別川', icon: spotIcon, desc: 'カヌー・ラフティング' },
-            { lat: 42.737, lng: 140.372, label: '幽泉閣（温泉）', icon: spotIcon, desc: '昆布から徒歩3分' },
+            { q: '北海道虻田郡喜茂別町鈴川4',             label: 'SISUMO 鈴川',      color: '#007E66', desc: '喜茂別町' },
+            { q: '北海道磯谷郡蘭越町昆布72-10',            label: 'SISUMO 昆布',      color: '#007E66', desc: '蘭越町' },
+            { q: '留寿都リゾート 北海道',                   label: 'ルスツリゾート',   color: '#444',    desc: '鈴川から車で約10分' },
+            { q: 'ニセコグランヒラフ 北海道',               label: 'ニセコ',           color: '#444',    desc: '車で約30分' },
+            { q: '洞爺湖 北海道',                           label: '洞爺湖',           color: '#444',    desc: '車で約30分' },
+            { q: '羊蹄山 北海道',                           label: '羊蹄山',           color: '#444',    desc: '後志の象徴' },
+            { q: '幽泉閣 蘭越町',                           label: '幽泉閣（温泉）',   color: '#444',    desc: '昆布から徒歩3分' },
           ];
 
           spots.forEach(function(s) {
-            L.marker([s.lat, s.lng], { icon: s.icon })
-              .addTo(map)
-              .bindPopup('<strong>' + s.label + '</strong><br><span style="font-size:11px;">' + s.desc + '</span>');
+            fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(s.q) + '&format=json&limit=1&accept-language=ja')
+              .then(function(r){ return r.json(); })
+              .then(function(data){
+                if (!data[0]) return;
+                var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+                L.marker([lat, lng], { icon: makeIcon(s.color, s.label) })
+                  .addTo(map)
+                  .bindPopup('<strong>' + s.label + '</strong><br><span style="font-size:11px;">' + s.desc + '</span>');
+              });
           });
         })();
       </script>
